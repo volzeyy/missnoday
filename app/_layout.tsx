@@ -75,11 +75,6 @@ function RootLayoutNav() {
       <Stack.Screen name="onboard" options={{ 
         presentation: 'modal',
       }} />
-      <Stack.Screen name="habits" options={{ 
-        presentation: "modal", 
-        headerShown: true, 
-        title: "Select a Habit" 
-      }} />
       <Stack.Screen name="privacypolicy" options={{ presentation: 'modal' }} />
       <Stack.Screen name="termsofservice" options={{ presentation: 'modal' }} />
     </Stack>
