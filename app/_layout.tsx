@@ -1,10 +1,11 @@
+import { Text, StyleSheet } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import useTheme from '@/hooks/useTheme';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,9 +45,51 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const { background } = useTheme();
+
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: background },
+        contentStyle: { backgroundColor: background },
+        headerTitle: ({children}) => (
+          <Text style={styles.title}>{children}</Text>
+        ),
+      }}
+    >
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(main)" 
+        options={{ 
+          contentStyle: {padding: 0},
+        }}
+      />
+      <Stack.Screen name="(register)" options={{
+        title: "Create an Account",
+      }}/>
+      <Stack.Screen name="(login)" options={{
+        title: "Log In",
+      }}/>
+      <Stack.Screen name="(habit)" />
+      <Stack.Screen name="onboard" options={{ 
+        presentation: 'modal',
+      }} />
+      <Stack.Screen name="habits" options={{ 
+        presentation: "modal", 
+        headerShown: true, 
+        title: "Select a Habit" 
+      }} />
+      <Stack.Screen name="privacypolicy" options={{ presentation: 'modal' }} />
+      <Stack.Screen name="termsofservice" options={{ presentation: 'modal' }} />
     </Stack>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    width: "100%",
+    fontWeight: "600",
+    fontSize: 24,
+  }
+})
