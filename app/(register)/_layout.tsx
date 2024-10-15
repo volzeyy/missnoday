@@ -4,13 +4,20 @@ import { router, Stack } from 'expo-router'
 import { TouchableOpacity } from 'react-native'
 
 const Layout = () => {
-    const { text } = useTheme()
+    const { background, text } = useTheme()
 
     return (
       <Stack
         screenOptions={{
           headerShown: true,
           headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: background,
+          },
+          contentStyle: {
+            backgroundColor: background,
+            padding: 10,
+          },
           headerLeft: () => (
             <TouchableOpacity style={{ paddingRight: 10}} onPress={() => {router.dismiss()}}>
               <Ionicons size={28} color={text} name="arrow-back" />
