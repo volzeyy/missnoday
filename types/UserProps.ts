@@ -3,6 +3,7 @@ interface UserProps {
     email: string;
     username: string;
     full_name: string;
+    avatar_url: string;
     coins: number;
     streak: number;
     streak_freeze: number;
