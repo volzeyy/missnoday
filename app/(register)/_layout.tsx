@@ -1,10 +1,10 @@
 import useTheme from '@/hooks/useTheme'
 import { Ionicons } from '@expo/vector-icons'
 import { router, Stack } from 'expo-router'
-import { TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 
 const Layout = () => {
-    const { background, text } = useTheme()
+    const { text } = useTheme()
 
     return (
       <Stack
@@ -47,11 +47,3 @@ const Layout = () => {
   }
 
 export default Layout
-
-const styles = StyleSheet.create({
-    title: {
-        width: "100%",
-        fontWeight: "600",
-        fontSize: 24,
-    }
-})
