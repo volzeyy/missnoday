@@ -68,7 +68,6 @@ const Scene = (props: {user_id: string | undefined, cameraPos: Vector3}) => {
           makeDefault
           position={cameraPos || [0, 2, 10]}
           rotation={[0, 0, 0]}
-          receiveShadow
         />
       </Canvas>
       <View
