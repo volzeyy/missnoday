@@ -21,12 +21,6 @@ const Layout = () => {
           }}
         >
             <Stack.Screen 
-                name="index" 
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <Stack.Screen 
                 name="friends"
                 options={{
                     title: "Add Friends",
