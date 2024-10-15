@@ -6,7 +6,7 @@ import CosmeticProps from '@/types/CosmeticProps';
 import { useGLTF } from '@react-three/drei/native';
 import { forwardRef, useEffect, useState } from 'react';
 
-const Cosmetic = forwardRef((props: { cosmetic_id: string, type: string }, ref: React.Ref<any>) => {
+const Cosmetic = forwardRef((props: { cosmetic_id: string | null, type: string }, ref: React.Ref<any>) => {
     const { cosmetic_id, type } = props;
 
     const source = useFetchSource(cosmetic_id);

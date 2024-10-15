@@ -11,8 +11,9 @@ import characterModelPath from "@/assets/models/character.glb";
 import COSMETICS from "@/constants/Cosmetics";
 import Cosmetic from "../Cosmetic";
 import useFetchSource from "@/hooks/useFetchSource";
+import CosmeticProps from "@/types/CharacterProps";
 
-const Character = (props: any) => {
+const Character = (props: {rotationY: number, character: CosmeticProps | null}) => {
   const { rotationY, character } = props;
 
   const characterRef = useRef<Group>(null);
@@ -25,7 +26,7 @@ const Character = (props: any) => {
 
   const { scene: characterScene } = useGLTF(characterModelPath);
 
-  const source = character ? useFetchSource(character.face) : null;
+  const source = character && character.face_id ? useFetchSource(character.face_id) : null;
 
   const faceTexture = useTexture(
     source || COSMETICS.face.default,
@@ -74,19 +75,19 @@ const Character = (props: any) => {
       <group ref={groupRef} {...props}>
         <primitive object={characterScene} ref={characterRef} />
         <Suspense>
-          <Cosmetic ref={hatRef} cosmetic_id={character && character.hat} type="hat" />
+          <Cosmetic ref={hatRef} cosmetic_id={character && character.hat_id} type="hat" />
         </Suspense>
         <Suspense>
-          <Cosmetic ref={hairRef} cosmetic_id={character && character.hair} type="hair" />
+          <Cosmetic ref={hairRef} cosmetic_id={character && character.hair_id} type="hair" />
         </Suspense>
         <Suspense>
-          <Cosmetic ref={shirtRef} cosmetic_id={character && character.shirt} type="shirt" />
+          <Cosmetic ref={shirtRef} cosmetic_id={character && character.shirt_id} type="shirt" />
         </Suspense>
         <Suspense>
-          <Cosmetic ref={pantsRef} cosmetic_id={character && character.pants} type="pants" />
+          <Cosmetic ref={pantsRef} cosmetic_id={character && character.pants_id} type="pants" />
         </Suspense>
         <Suspense>
-          <Cosmetic ref={shoesRef} cosmetic_id={character && character.shoes} type="shoes" />
+          <Cosmetic ref={shoesRef} cosmetic_id={character && character.shoes_id} type="shoes" />
         </Suspense>
       </group>
     </Suspense>

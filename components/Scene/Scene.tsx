@@ -8,8 +8,9 @@ import {
 import { PanResponder, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 import useFetchCharacter from "@/hooks/useFetchCharacter";
+import { Vector3 } from "three";
 
-const Scene = (props: any) => {
+const Scene = (props: {user_id: string | undefined, cameraPos: Vector3}) => {
   const { 
     user_id, 
     cameraPos, 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CharacterProps from "@/types/CharacterProps";
 import { supabase } from "@/config/supabase";
 
-const useFetchCharacter = (user_id: string | null) => {
+const useFetchCharacter = (user_id: string | undefined) => {
     const [character, setCharacter] = useState<CharacterProps | null>(null);
   
     useEffect(() => {

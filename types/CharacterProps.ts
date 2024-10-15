@@ -6,6 +6,7 @@ interface CosmeticProps {
     face_id: string | null;
     shirt_id: string | null;
     pants_id: string | null;
+    shoes_id: string | null;
     background_id: string | null;
     created_at: string;
     updated_at: string;
