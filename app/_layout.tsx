@@ -1,11 +1,13 @@
 import { Text, StyleSheet } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { router, Stack, useFocusEffect } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import useTheme from '@/hooks/useTheme';
+import useSessionStore from '@/stores/useSessionStore';
+import { supabase } from '@/config/supabase';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -31,12 +33,6 @@ export default function RootLayout() {
     if (error) throw error;
   }, [error]);
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
   if (!loaded) {
     return null;
   }
@@ -46,6 +42,27 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const { background } = useTheme();
+
+  const { session, setSession } = useSessionStore();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session: newSession } }) => {
+      setSession(newSession);
+    });
+
+    supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
+  }, []);
+
+  useFocusEffect(() => {
+    if (!session || !session.user.id) {
+      return;
+    }
+
+    router.replace("/(main)/(tabs)/");
+    SplashScreen.hideAsync();
+  });
 
   return (
     <Stack
@@ -59,24 +76,48 @@ function RootLayoutNav() {
         ),
       }}
     >
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(main)" 
+      <Stack.Screen 
+        name="index" 
+      />
+      <Stack.Screen 
+        name="(main)" 
         options={{ 
           contentStyle: {padding: 0},
         }}
       />
-      <Stack.Screen name="(register)" options={{
-        title: "Create an Account",
-      }}/>
-      <Stack.Screen name="(login)" options={{
-        title: "Log In",
-      }}/>
-      <Stack.Screen name="(habit)" />
-      <Stack.Screen name="onboard" options={{ 
-        presentation: 'modal',
-      }} />
-      <Stack.Screen name="privacypolicy" options={{ presentation: 'modal' }} />
-      <Stack.Screen name="termsofservice" options={{ presentation: 'modal' }} />
+      <Stack.Screen 
+        name="(register)" 
+        options={{
+          title: "Create an Account",
+        }}
+      />
+      <Stack.Screen 
+        name="(login)" 
+        options={{
+          title: "Log In",
+        }}
+      />
+      <Stack.Screen 
+        name="(habit)" 
+      />
+      <Stack.Screen 
+        name="onboard" 
+        options={{ 
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen 
+        name="privacypolicy" 
+        options={{ 
+          presentation: 'modal' 
+        }} 
+      />
+      <Stack.Screen 
+        name="termsofservice" 
+        options={{ 
+          presentation: 'modal' 
+        }} 
+      />
     </Stack>
   );
 }
