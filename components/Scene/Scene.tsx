@@ -2,7 +2,7 @@ import Character from "../Character";
 import { Fragment, Suspense, useCallback, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber/native";
 import {
-  Float,
+  Environment,
   PerspectiveCamera,
 } from "@react-three/drei/native";
 import { PanResponder, View } from "react-native";
@@ -57,22 +57,9 @@ const Scene = (props: any) => {
   return (
     <Fragment>
       <Canvas>
-        <Float 
-          speed={5}
-        />
-        {/* Global lighting */}
-        <ambientLight intensity={1.3} />
-
-        {/* Spotlight */}
-        <spotLight
-          position={[0, 2, 6]}
-          angle={0.5} // Narrower light cone for a focused spotlight
-          penumbra={1} // Softer edge for light
-          intensity={10} // Intensity lowered for realism
-        />
-
-        {/* Directional light for added realism */}
-        <directionalLight position={[-3, 6, 3]} intensity={2} />
+        <Suspense>
+          <Environment preset="lobby" environmentIntensity={1} environmentRotation={[2, -8, 2]} />
+        </Suspense>
         <Suspense fallback={null}>
           <Character character={character} rotationY={rotationY} />
         </Suspense>
@@ -96,14 +83,3 @@ const Scene = (props: any) => {
 };
 
 export default Scene;
-
-// forest     +++
-// park       +++
-// dawn       +++ (bad with no background)
-// sunset     ++ (best for no background)
-// apartment  ++
-// city       - (just bad)
-// studio     - (also just bad)
-// warehouse  +
-// lobby      + (too bright)
-// night      + (too dark)
