@@ -3,7 +3,8 @@ interface CosmeticProps {
         id: string, 
         type: string, 
         name: string, 
-        src: string
+        src: string,
+        thumbnail?: string,
     };
 }
 
