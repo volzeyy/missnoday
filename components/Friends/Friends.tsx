@@ -28,13 +28,19 @@ const Friends = (props: { user_id: string | undefined }) => {
     router.navigate(`/(main)/user/${friendId}`);
   };
 
+  const handleNavigateToCustomize = () => {
+    router.navigate("/(main)/customize")
+  }
+
   return (
     <View style={styles.scrollViewContainer}>
       <ScrollView contentContainerStyle={[styles.container]} horizontal>
-        <User
-          key={user?.id}
-          user={user ? user : undefined}
-        />
+        <TouchableOpacity onPress={handleNavigateToCustomize}>
+          <User
+            key={user?.id}
+            user={user ? user : undefined}
+          />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={handleNavigateToFriends}
           style={[styles.friendsButtonContainer, { backgroundColor: primary }]}
