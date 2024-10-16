@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import { TouchableOpacity } from 'react-native'
 
 const Layout = () => {
-    const { primary } = useTheme();
+    const { background } = useTheme();
 
     const { session } = useSessionStore();
     const { setUser } = useUserStore();
@@ -52,8 +52,8 @@ const Layout = () => {
           screenOptions={{
             headerShown: false,
             headerShadowVisible: false,
-            headerStyle: { backgroundColor: primary },
-            contentStyle: { backgroundColor: primary },
+            headerStyle: { backgroundColor: background },
+            contentStyle: { backgroundColor: background },
             headerLeft: () => (
               <TouchableOpacity style={{ paddingRight: 10}} onPress={() => {router.dismiss()}}>
                 <Ionicons size={28} color={"black"} name="arrow-back" />
