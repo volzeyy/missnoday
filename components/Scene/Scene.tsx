@@ -9,14 +9,16 @@ import { PanResponder, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 import useFetchCharacter from "@/hooks/useFetchCharacter";
 import { Vector3 } from "three";
+import CharacterProps from "@/types/CharacterProps";
 
-const Scene = (props: {user_id: string | undefined, cameraPos: Vector3}) => {
+const Scene = (props: {user_id?: string, character?: CharacterProps | null, cameraPos: Vector3}) => {
   const { 
-    user_id, 
+    user_id,
+    character,
     cameraPos, 
   } = props;
 
-  const character = useFetchCharacter(user_id);
+  const characterData = useFetchCharacter(user_id);
 
   const [rotationY, setRotationY] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -62,7 +64,7 @@ const Scene = (props: {user_id: string | undefined, cameraPos: Vector3}) => {
           <Environment preset="lobby" environmentIntensity={1} environmentRotation={[2, -8, 2]} />
         </Suspense>
         <Suspense fallback={null}>
-          <Character character={character} rotationY={rotationY} />
+          <Character character={character ? character : characterData} rotationY={rotationY} />
         </Suspense>
         <PerspectiveCamera
           makeDefault
