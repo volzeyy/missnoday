@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import useTheme from '@/hooks/useTheme';
 import useSessionStore from '@/stores/useSessionStore';
 import { supabase } from '@/config/supabase';
+import * as NavigationBar from 'expo-navigation-bar';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -54,6 +55,15 @@ function RootLayoutNav() {
       setSession(newSession);
     });
   }, []);
+
+  useEffect(() => {
+    const updateNavigationBar = async () => {
+      await NavigationBar.setBackgroundColorAsync(background);
+      await NavigationBar.setButtonStyleAsync('dark');
+    };
+
+    updateNavigationBar();
+  }, [])
 
   useFocusEffect(() => {
     if (!session || !session.user.id) {
