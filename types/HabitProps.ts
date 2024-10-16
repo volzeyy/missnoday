@@ -6,6 +6,7 @@ interface HabitsProps {
     goal: string;
     duration: number;
     is_done_today: boolean;
+    is_expired: boolean;
     created_at: string;
 }
 
