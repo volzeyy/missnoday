@@ -69,7 +69,7 @@ const CosmeticEquip = ({ cosmetic_id, index }: any) => {
       <TouchableOpacity
         style={[
           styles.container,
-          { backgroundColor: secondary },
+          { backgroundColor: background },
           isEquipped ? { backgroundColor: primary } : {},
         ]}
         onPress={handleEquipCosmetic}
