@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import CosmeticProps from "@/types/CosmeticProps";
 import { supabase } from "@/config/supabase";
 
 const useFetchSource = (cosmetic_id: string | null) => {
   const [source, setSource] = useState<string | null>(null);
 
   useEffect(() => {
-    if (cosmetic_id && !source) {
+    if (cosmetic_id) {
       getCosmeticData();
     }
   }, [cosmetic_id]);

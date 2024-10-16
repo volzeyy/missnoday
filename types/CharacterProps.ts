@@ -1,13 +1,13 @@
 interface CosmeticProps {
     id: string;
     user_id: string;
-    hat_id: string | null;
-    hair_id: string | null;
-    face_id: string | null;
-    shirt_id: string | null;
-    pants_id: string | null;
-    shoes_id: string | null;
-    background_id: string | null;
+    hat: string | null;
+    hair: string | null;
+    face: string | null;
+    shirt: string | null;
+    pants: string | null;
+    shoes: string | null;
+    background: string | null;
     created_at: string;
     updated_at: string;
 }

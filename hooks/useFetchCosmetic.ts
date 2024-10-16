@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CosmeticProps from "@/types/CosmeticProps";
 import { supabase } from "@/config/supabase";
 
-const useFetchCosmetic = (cosmetic_id: string) => {
+const useFetchCosmetic = (cosmetic_id: string | undefined) => {
     const [cosmetic, setCosmetic] = useState<CosmeticProps | null>(null);
   
     useEffect(() => {
