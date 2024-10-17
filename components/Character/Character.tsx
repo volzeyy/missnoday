@@ -5,16 +5,17 @@ import {
   useTexture,
 } from "@react-three/drei/native";
 import { useFrame } from "@react-three/fiber/native";
-import { Group, Texture, Mesh, Object3D, MeshBasicMaterial } from "three";
+import { Group, Texture, Mesh, Object3D, MeshBasicMaterial, Color } from "three";
 
 import characterModelPath from "@/assets/models/character.glb";
 import COSMETICS from "@/constants/Cosmetics";
 import Cosmetic from "../Cosmetic";
 import useFetchSource from "@/hooks/useFetchSource";
 import CharacterProps from "@/types/CharacterProps";
+import ColorsProps from "@/types/ColorsProps";
 
-const Character = (props: {rotationY: number, character: CharacterProps | null}) => {
-  const { rotationY, character } = props;
+const Character = (props: {rotationY: number, character: CharacterProps | null, colors: ColorsProps | null}) => {
+  const { rotationY, character, colors } = props;
 
   const characterRef = useRef<Group>(null);
   const hatRef = useRef<Group>(null);
@@ -46,10 +47,24 @@ const Character = (props: {rotationY: number, character: CharacterProps | null})
   useEffect(() => {
     if (characterScene && faceTexture) {
       characterScene.traverse((child: Object3D) => {
-        // Check if the child is a mesh and if the name matches "head"
+        
+        if ((child as Mesh).isMesh && child.name == "body") {
+          const mesh = child as Mesh;
+          const material = mesh.material as MeshBasicMaterial;
+
+          if (colors && colors.skin) {
+            material.color = new Color(colors.skin);
+          }
+        }
+
         if ((child as Mesh).isMesh && child.name === "head") {
           const mesh = child as Mesh;
           const material = mesh.material as MeshBasicMaterial;
+
+          if (colors && colors.skin) {
+            material.color = new Color(colors.skin);
+          }
+
           if (material) {
             if (material.map == null) {
               return;
@@ -62,7 +77,7 @@ const Character = (props: {rotationY: number, character: CharacterProps | null})
         }
       });
     }
-  }, [characterScene, faceTexture]);
+  }, [characterScene, faceTexture, colors]);
 
   useFrame((_state, delta) => {
     if (groupRef.current) {
@@ -75,19 +90,44 @@ const Character = (props: {rotationY: number, character: CharacterProps | null})
       <group ref={groupRef} {...props}>
         <primitive object={characterScene} ref={characterRef} />
         <Suspense>
-          <Cosmetic ref={hatRef} cosmetic_id={character && character.hat} type="hat" />
+          <Cosmetic 
+            ref={hatRef} 
+            cosmetic_id={character && character.hat} 
+            color={colors && colors.hat} 
+            type="hat" 
+          />
         </Suspense>
         <Suspense>
-          <Cosmetic ref={hairRef} cosmetic_id={character && character.hair} type="hair" />
+          <Cosmetic 
+            ref={hairRef} 
+            cosmetic_id={character && character.hair} 
+            color={colors && colors.hair}
+            type="hair" 
+          />
         </Suspense>
         <Suspense>
-          <Cosmetic ref={shirtRef} cosmetic_id={character && character.shirt} type="shirt" />
+          <Cosmetic 
+            ref={shirtRef} 
+            cosmetic_id={character && character.shirt} 
+            color={colors && colors.shirt}
+            type="shirt" 
+          />
         </Suspense>
         <Suspense>
-          <Cosmetic ref={pantsRef} cosmetic_id={character && character.pants} type="pants" />
+          <Cosmetic 
+            ref={pantsRef} 
+            cosmetic_id={character && character.pants}
+            color={colors && colors.pants}
+            type="pants" 
+          />
         </Suspense>
         <Suspense>
-          <Cosmetic ref={shoesRef} cosmetic_id={character && character.shoes} type="shoes" />
+          <Cosmetic 
+            ref={shoesRef} 
+            cosmetic_id={character && character.shoes} 
+            color={colors && colors.shoes}
+            type="shoes" 
+          />
         </Suspense>
       </group>
     </Suspense>

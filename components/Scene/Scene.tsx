@@ -10,11 +10,18 @@ import { useFocusEffect } from "expo-router";
 import useFetchCharacter from "@/hooks/useFetchCharacter";
 import { Vector3 } from "three";
 import CharacterProps from "@/types/CharacterProps";
+import ColorsProps from "@/types/ColorsProps";
 
-const Scene = (props: {user_id?: string, character?: CharacterProps | null, cameraPos: Vector3}) => {
+const Scene = (props: {
+  user_id?: string, 
+  character?: CharacterProps | null,
+  colors?: ColorsProps | null,
+  cameraPos: Vector3
+}) => {
   const { 
     user_id,
     character,
+    colors,
     cameraPos, 
   } = props;
 
@@ -64,7 +71,7 @@ const Scene = (props: {user_id?: string, character?: CharacterProps | null, came
           <Environment preset="lobby" environmentIntensity={1} environmentRotation={[2, -8, 2]} />
         </Suspense>
         <Suspense fallback={null}>
-          <Character character={character ? character : characterData} rotationY={rotationY} />
+          <Character character={character ? character : characterData} colors={colors ? colors : null} rotationY={rotationY} />
         </Suspense>
         <PerspectiveCamera
           makeDefault
