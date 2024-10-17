@@ -1,6 +1,6 @@
 import useCharacterStore from "@/stores/useCharacterStore";
 
-const isCosmeticEquipped = (cosmetic_id: string) => {
+const isCosmeticEquipped = (cosmetic_id: string | undefined) => {
     const { character } = useCharacterStore();
 
     if (!character) {
