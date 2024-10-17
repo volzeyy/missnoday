@@ -1,8 +1,10 @@
 import useFetchCharacter from '@/hooks/useFetchCharacter';
+import useFetchColors from '@/hooks/useFetchColors';
 import useFetchHabits from '@/hooks/useFetchHabits';
 import useFetchUser from '@/hooks/useFetchUser';
 import useTheme from '@/hooks/useTheme'
 import useCharacterStore from '@/stores/useCharacterStore';
+import useColorsStore from '@/stores/useColorsStore';
 import useHabitsStore from '@/stores/useHabitsStore';
 import useSessionStore from '@/stores/useSessionStore';
 import useUserStore from '@/stores/useUserStore';
@@ -18,10 +20,12 @@ const Layout = () => {
     const { setUser } = useUserStore();
     const { setCharacter } = useCharacterStore();
     const { setHabits } = useHabitsStore();
+    const { colors, setColors } = useColorsStore();
 
     const userData = useFetchUser(session?.user.id)
     const habitsData = useFetchHabits(session?.user.id)
     const characterData = useFetchCharacter(session?.user.id)
+    const colorsData = useFetchColors(session?.user.id)
 
     useEffect(() => {
         if (!userData) {
@@ -46,6 +50,14 @@ const Layout = () => {
 
         setHabits(habitsData);
     }, [habitsData])
+
+    useEffect(() => {
+        if (!colorsData) {
+            return;
+        }
+
+        setColors(colorsData);
+    }, [colorsData])
 
     return (
         <Stack
