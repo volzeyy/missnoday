@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import habits from "@/constants/Habits";
-import HabitType from "@/components/HabitType";
+import Type from "@/components/Type";
 import HabitSelect from "@/components/HabitSelect";
 
 const Page = () => {
@@ -23,7 +23,7 @@ const Page = () => {
               contentContainerStyle={styles.vanityTypesContainer}
             >
               {/* Add "All" option manually */}
-              <HabitType
+              <Type
                 type="all"
                 icon="star" // Icon for "all"
                 key="all"
@@ -32,7 +32,7 @@ const Page = () => {
                 activeType={activeType}
               />
               {Object.keys(habits).map((type) => (
-                <HabitType
+                <Type
                   type={type}
                   icon={habits[type].icon}
                   key={type}
