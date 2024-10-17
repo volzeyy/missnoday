@@ -13,19 +13,17 @@ import useCharacterStore from "@/stores/useCharacterStore";
 import CharacterProps from "@/types/CharacterProps";
 import isCosmeticEquipped from "@/helpers/isCosmeticEquipped";
 import useUserStore from "@/stores/useUserStore";
+import CosmeticProps from "@/types/CosmeticProps";
 
-const { width } = Dimensions.get("window");
-
-const CosmeticEquip = ({ cosmetic_id, index }: any) => {
+const CosmeticEquip = ({ id, name }: Partial<CosmeticProps>) => {
   const [loading, setLoading] = useState(false);
 
-  const { primary, secondary, text, background } = useTheme();
-  const cosmeticData = useFetchCosmetic(cosmetic_id);
+  const { primary, text, background } = useTheme();
   
   const { setCharacter } = useCharacterStore();
   const { user } = useUserStore();
 
-  const isEquipped = isCosmeticEquipped(cosmetic_id);
+  const isEquipped = isCosmeticEquipped(id);
 
   const handleEquipCosmetic = async () => {
     try {
@@ -33,13 +31,13 @@ const CosmeticEquip = ({ cosmetic_id, index }: any) => {
         return;
       }
 
-      if (!cosmetic_id) {
+      if (!id) {
         return;
       }
 
       const { data, error: equipError } = await supabase.rpc("update_cosmetic", {
         current_user_id: user.id,
-        current_cosmetic_id: cosmetic_id,
+        current_cosmetic_id: id,
       });
 
       if (equipError) {
@@ -59,17 +57,10 @@ const CosmeticEquip = ({ cosmetic_id, index }: any) => {
   };
 
   return (
-    <View
-      style={[
-        styles.wrapper,
-        index % 2 == 0 ? { paddingLeft: 10, paddingRight: 5 } : {},
-        index % 2 == 1 ? { paddingRight: 10, paddingLeft: 5 } : {},
-      ]}
-    >
       <TouchableOpacity
         style={[
           styles.container,
-          { backgroundColor: background },
+          { backgroundColor:"rgb(225, 224, 227)", width: 125, height: 125},
           isEquipped ? { backgroundColor: primary } : {},
         ]}
         onPress={handleEquipCosmetic}
@@ -79,19 +70,14 @@ const CosmeticEquip = ({ cosmetic_id, index }: any) => {
           styles.text, 
           { color: text },
           isEquipped ? { color: background } : null,
-        ]}>{cosmeticData?.name}</Text>
+        ]}>{name}</Text>
       </TouchableOpacity>
-    </View>
   );
 };
 
 export default CosmeticEquip;
 
 const styles = StyleSheet.create({
-  wrapper: {
-    width: width / 2,
-    paddingBottom: 10,
-  },
   container: {
     padding: 10,
     aspectRatio: 1,
