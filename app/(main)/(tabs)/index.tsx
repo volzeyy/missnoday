@@ -8,6 +8,7 @@ import { ScrollView, StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Vector3 } from 'three';
 import HabitGroup from "@/components/HabitGroup/HabitGroup";
+import useColorsStore from '@/stores/useColorsStore';
 
 const Home = () => {
   const insets = useSafeAreaInsets();
@@ -15,6 +16,7 @@ const Home = () => {
 
   const { user } = useUserStore();
   const { character } = useCharacterStore();
+  const { colors } = useColorsStore();
   const { habits } = useHabitsStore();
 
   const pendingHabits = habits?.filter(
@@ -31,7 +33,8 @@ const Home = () => {
       />
       <View style={{ flex: 1, width: "100%"}}>
         <Scene 
-          cameraPos={new Vector3(0, 2.75, 7)}
+          cameraPos={new Vector3(0, 2.7, 6.5)}
+          colors={colors}
           character={character}
         />
       </View>
