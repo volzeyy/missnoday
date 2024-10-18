@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Vector3 } from 'three';
 import HabitGroup from "@/components/HabitGroup/HabitGroup";
 import useColorsStore from '@/stores/useColorsStore';
+import { Suspense } from 'react';
 
 const Home = () => {
   const insets = useSafeAreaInsets();
@@ -32,11 +33,13 @@ const Home = () => {
         user_id={user?.id}
       />
       <View style={{ flex: 1, width: "100%"}}>
-        <Scene 
-          cameraPos={new Vector3(0, 2.7, 6.5)}
-          colors={colors}
-          character={character}
-        />
+        <Suspense>
+          <Scene 
+            cameraPos={new Vector3(0, 2.7, 6.5)}
+            colors={colors}
+            character={character}
+          />
+        </Suspense>
       </View>
       <View style={styles.scrollViewContainer}>
           <ScrollView 
