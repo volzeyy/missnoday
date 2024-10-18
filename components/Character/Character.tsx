@@ -27,7 +27,7 @@ const Character = (props: {rotationY: number, character: CharacterProps | null, 
 
   const { scene: characterScene } = useGLTF(characterModelPath);
 
-  const source = character ? useFetchSource(character.face) : null;
+  const source = useFetchSource(character && character.face)
 
   const faceTexture = useTexture(
     source || COSMETICS.face.default,
@@ -86,7 +86,6 @@ const Character = (props: {rotationY: number, character: CharacterProps | null, 
   });
 
   return (
-    <Suspense>
       <group ref={groupRef} {...props}>
         <primitive object={characterScene} ref={characterRef} />
         <Suspense>
@@ -130,7 +129,6 @@ const Character = (props: {rotationY: number, character: CharacterProps | null, 
           />
         </Suspense>
       </group>
-    </Suspense>
   );
 };
 
