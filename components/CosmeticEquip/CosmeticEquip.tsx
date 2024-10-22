@@ -60,7 +60,7 @@ const CosmeticEquip = ({ id, name }: Partial<CosmeticProps>) => {
       <TouchableOpacity
         style={[
           styles.container,
-          { backgroundColor:"rgb(225, 224, 227)", width: 125, height: 125},
+          { backgroundColor: background, width: 125, height: 125, borderWidth: 2, borderColor: text},
           isEquipped ? { backgroundColor: primary } : {},
         ]}
         onPress={handleEquipCosmetic}
@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   text: {
-    fontWeight: "500",
     fontSize: 16,
   },
 });

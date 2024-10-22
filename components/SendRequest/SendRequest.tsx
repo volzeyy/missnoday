@@ -8,13 +8,14 @@ import useSessionStore from '@/stores/useSessionStore';
 import useFriendsStore from '@/stores/useFriendsStore';
 import useFetchUser from '@/hooks/useFetchUser';
 import useTheme from '@/hooks/useTheme';
+import Streak from '../Streak';
 
 const SendRequest = ({ user_id }: { user_id: string }) => {
   const user = useFetchUser(user_id);
   const { session } = useSessionStore((state) => state);
   const { friends, setFriends } = useFriendsStore((state) => state);
 
-  const { secondary, primary, text, background } = useTheme();
+  const { text, background } = useTheme();
 
   const handleSendFriendRequest = async () => {
     try {
@@ -25,7 +26,7 @@ const SendRequest = ({ user_id }: { user_id: string }) => {
       const { error } = await supabase.rpc('send_friend_request', { sender: session?.user.id, receiver: user_id });
 
       if (error) {
-        throw error;
+        throw error.message;
       }
 
       setFriends({
@@ -33,9 +34,7 @@ const SendRequest = ({ user_id }: { user_id: string }) => {
         sent_requests: friends.sent_requests ? [...friends.sent_requests, user_id] : [user_id]
       });
     } catch (error) {
-      if (error instanceof Error) {
-        alert(`Error in handleSendFriendRequest: ${error.message}`);
-      }
+        alert(`Error in handleSendFriendRequest: ${error}`);
     }
   };
 
@@ -44,22 +43,25 @@ const SendRequest = ({ user_id }: { user_id: string }) => {
   };
 
   if (!user) {
-    return <Text style={{ color: secondary }}>Loading...</Text>;
+    return <Text style={{ color: text }}>Loading...</Text>;
   }
 
   return (
-    <View style={[styles.container, {backgroundColor: primary, borderColor: text}]}>
+    <View style={[styles.container, {backgroundColor: background, borderColor: text}]}>
       <View style={styles.userInfo}>
         <TouchableOpacity onPress={handleNavigateToUserProfile}>
           <Avatar src={user.avatar_url} />
         </TouchableOpacity>
         <View style={styles.infoContainer}>
-          <Text style={[styles.name, {color: background}]}>{user.full_name}</Text>
-          <Text style={[styles.username, {color: secondary}]}>@{user.username}</Text>
+          <View style={styles.nameStreakContainer}>
+            <Text style={[styles.name, {color: text}]}>{user.full_name}</Text>
+            <Streak days={user.streak} />
+          </View>
+          <Text style={[styles.username, {color: text, opacity: 0.7}]}>@{user.username}</Text>
         </View>
       </View>
       <View style={styles.actions}>
-        <Button title="Send request" onPress={handleSendFriendRequest} color={text} backgroundColor={secondary} />
+        <Button title="Send request" onPress={handleSendFriendRequest} color={background} backgroundColor={text} />
       </View>
     </View>
   );
@@ -102,4 +104,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     width: "100%",
   },
+  nameStreakContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 5,
+  }
 });

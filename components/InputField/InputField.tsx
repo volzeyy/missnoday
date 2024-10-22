@@ -5,14 +5,14 @@ import useTheme from '@/hooks/useTheme';
 const InputField = (props: InputFieldProps) => {
     const { value, onChangeText, placeholder, type, isLoading } = props;
 
-    const { text, background, primary, secondary, accent } = useTheme();
+    const { text, background } = useTheme();
 
     return (
         <TextInput 
             style={[
                 {...styles.textInput},
-                {backgroundColor: background, color: text},
-                isLoading ? {color: secondary} : {},
+                {backgroundColor: background, color: text, borderColor: text},
+                isLoading ? {color: text, opacity: 0.7} : {},
             ]} 
             value={value} 
             onChangeText={onChangeText} 
@@ -37,7 +37,7 @@ export default InputField
 const styles = StyleSheet.create({
     textInput: {
         width: "100%",
-        borderWidth: 1,
+        borderWidth: 2,
         borderRadius: 20,
         paddingHorizontal: 10,
         height: 65,

@@ -8,29 +8,29 @@ const SentRequest = (props: { user_id: string }) => {
   const { user_id } = props;
   const user = useFetchUser(user_id);
 
-  const { text, background, primary, secondary, accent } = useTheme();
+  const { text, background } = useTheme();
 
   const handleNavigateToUserProfile = () => {
     router.navigate(`/(main)/user/${user_id}`);
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: primary, borderColor: text}]}>
+    <View style={[styles.container, {backgroundColor: text, borderColor: text}]}>
       {user ? (
         <>
           <View style={styles.userInfo}>
             <TouchableOpacity onPress={handleNavigateToUserProfile}>
-              <Avatar url={user.avatar_url} />
+              <Avatar src={user.avatar_url} />
             </TouchableOpacity>
             <View style={styles.infoContainer}>
               <Text style={[styles.name, {color: background}]}>{user.full_name}</Text>
-              <Text style={[styles.username, {color: secondary}]}>@{user.username}</Text>
+              <Text style={[styles.username, {color: background, opacity: 0.7}]}>@{user.username}</Text>
             </View>
           </View>
-          <Text style={[styles.tip, {color: secondary}]}>User has yet to accept or deny your request!</Text>
+          <Text style={[styles.tip, {color: text}]}>User has yet to accept or deny your request!</Text>
         </>
       ) : (
-        <Text style={{ color: secondary }}>Loading...</Text>
+        <Text style={{ color: background }}>Loading...</Text>
       )}
     </View>
   );

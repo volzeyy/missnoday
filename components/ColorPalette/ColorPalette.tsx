@@ -13,7 +13,7 @@ import useTheme from "@/hooks/useTheme";
 const ColorPalette = (props: {activeType: string | null}) => {
   const { activeType } = props;
 
-  const { primary } = useTheme();
+  const { text } = useTheme();
   const { colors, setColors } = useColorsStore();
 
   const updateColor = async (newColor: string) => {
@@ -21,7 +21,7 @@ const ColorPalette = (props: {activeType: string | null}) => {
       return;
     }
 
-    if (activeType == "face" || activeType == "all") {
+    if (activeType == "skin") {
         setColors({ ...colors, skin: newColor });
     }
 
@@ -47,15 +47,10 @@ const ColorPalette = (props: {activeType: string | null}) => {
   };
 
   return (
-    <View style={{ gap: 10 }}>
-      <View>
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-          Set {activeType == "face" ? "skin" : activeType} color
-        </Text>
-      </View>
+    <View>
       <ScrollView
         horizontal
-        contentContainerStyle={{ gap: 5, paddingRight: 10 }}
+        contentContainerStyle={{ gap: 5, paddingHorizontal: 10 }}
         showsHorizontalScrollIndicator={false}
       >
         {Palette.map((color) => {
@@ -70,7 +65,7 @@ const ColorPalette = (props: {activeType: string | null}) => {
                 <View
                   style={[
                     styles.color,
-                    { backgroundColor: color, width: 40, height: 40, borderWidth: 2, borderColor: primary },
+                    { backgroundColor: color, width: 40, height: 40, borderWidth: 2, borderColor: text, marginHorizontal: 10, },
                   ]}
                 ></View>
               </TouchableOpacity>

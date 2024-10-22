@@ -92,7 +92,7 @@ const Goal = () => {
           />
           <View style={styles.habitContainer}>
             <Text style={[styles.label, { color: text }]}>{habit?.name}</Text>
-            <Text style={[styles.secondary, { color: accent }]}>
+            <Text style={[styles.secondary, { color: text, opacity: 0.7 }]}>
               {habits[habit?.type || ""].name}
             </Text>
           </View>
@@ -136,6 +136,5 @@ const styles = StyleSheet.create({
   secondary: {
     fontSize: 14,
     fontWeight: "500",
-    color: "rgba(0, 0, 0, 0.5)",
   },
 });

@@ -17,8 +17,6 @@ const Page = () => {
 
   const insets = useSafeAreaInsets()
 
-  const { text, secondary } = useTheme()
-
   const validateInput = async () => {
     try {
       setLoading(true)

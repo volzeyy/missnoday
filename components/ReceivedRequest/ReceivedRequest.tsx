@@ -14,7 +14,7 @@ const ReceivedRequest = ({ user_id }: { user_id: string }) => {
   const { session } = useSessionStore();
   const { friends, setFriends } = useFriendsStore();
 
-  const { text, background, primary, secondary, accent } = useTheme()
+  const { text, background } = useTheme()
 
   const acceptFriendRequest = async () => {
     try {
@@ -64,19 +64,19 @@ const ReceivedRequest = ({ user_id }: { user_id: string }) => {
   }
 
   return (
-    <View style={[styles.container, {backgroundColor: primary}]}>
+    <View style={[styles.container, {backgroundColor: "transparent"}]}>
       <View style={styles.userInfo}>
         <TouchableOpacity onPress={handleNavigateToUserProfile}>
           <Avatar src={user.avatar_url} />
         </TouchableOpacity>
         <View style={styles.infoContainer}>
-          <Text style={[styles.name, {color: background}]}>{user.full_name}</Text>
-          <Text style={[styles.username, {color: secondary}]}>@{user.username}</Text>
+          <Text style={[styles.name, {color: text}]}>{user.full_name}</Text>
+          <Text style={[styles.username, {color: text, opacity: 0.7}]}>@{user.username}</Text>
         </View>
       </View>
       <View style={styles.actions}>
-        <Button title="Accept" onPress={acceptFriendRequest} color={text} backgroundColor={secondary} />
-        <Button title="Deny" onPress={denyFriendRequest} backgroundColor={accent} color={background} />
+        <Button title="Accept" onPress={acceptFriendRequest} color={background} backgroundColor={text} />
+        <Button title="Deny" onPress={denyFriendRequest} backgroundColor={"transparent"} color={text} isBorder />
       </View>
     </View>
   );
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     gap: 10,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 10,
   },
   userInfo: {

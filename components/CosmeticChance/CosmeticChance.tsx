@@ -13,16 +13,16 @@ const CosmeticChance = ({
   type: string;
   chance: number | null;
 }) => {
-  const { text, background, primary, secondary } = useTheme();
+  const { text, background } = useTheme();
 
   return (
     <View style={styles.container}>
       <View
-        style={[styles.vanity, { backgroundColor: primary}]}
+        style={[styles.vanity, { backgroundColor: text}]}
       >
-        <Text style={[styles.status, { color: background }]}>{type}</Text>
         <Text style={[styles.name, { color: background }]}>{name}</Text>
-        <Text style={[{ color: secondary }]}>{chance}%</Text>
+        <Text style={[styles.type, { color: background, opacity: 0.7 }]}>{type}</Text>
+        <Text style={[{ color: background, fontWeight: "800" }]}>{chance}%</Text>
       </View>
     </View>
   );
@@ -41,9 +41,9 @@ const styles = StyleSheet.create({
     padding: 10,
     gap: 10,
   },
-  status: {
+  type: {
     fontWeight: "800",
-    fontSize: 22,
+    fontSize: 16,
   },
   name: {
     fontSize: 18,

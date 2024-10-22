@@ -1,8 +1,6 @@
 import { ScrollView, StyleSheet, View, Text } from "react-native";
 import { router } from "expo-router";
 import useHabitsStore from "@/stores/useHabitsStore";
-import Habit from "@/components/Habit";
-import HABITS from "@/constants/Habits";
 import RoundButton from "@/components/RoundButton";
 import useTheme from "@/hooks/useTheme";
 import Statistics from "@/components/Statistics";
@@ -25,26 +23,31 @@ const Habits = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: background }]}>
-      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollViewContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <Statistics user_id={user?.id} />
-        {pendingHabits && pendingHabits.length > 0 && (
-          <HabitGroup
-            label="Pending"
-            habitGroup={pendingHabits}
-          />
-        )}
-        {completedHabits && completedHabits.length > 0 && (
-          <HabitGroup 
-            label={pendingHabits?.length == 0 ? "Done for today!" : "Completed"}
-            habitGroup={completedHabits}
-          />
-        )}
-        {expiredHabits && expiredHabits.length > 0 && (
-          <HabitGroup 
-            label="Expired"
-            habitGroup={expiredHabits}
-          />
-        )}
+        <View style={styles.habitGroupsContainer}>
+          {pendingHabits && pendingHabits.length > 0 && (
+            <HabitGroup
+              label="Pending"
+              habitGroup={pendingHabits}
+            />
+          )}
+          {completedHabits && completedHabits.length > 0 && (
+            <HabitGroup 
+              label={pendingHabits?.length == 0 ? "Done for today!" : "Completed"}
+              habitGroup={completedHabits}
+            />
+          )}
+          {expiredHabits && expiredHabits.length > 0 && (
+            <HabitGroup 
+              label="Expired"
+              habitGroup={expiredHabits}
+            />
+          )}
+        </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
         <RoundButton
@@ -68,7 +71,7 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     display: "flex",
     justifyContent: "flex-start",
-    gap: 20,
+    gap: 40,
     padding: 10,
     paddingTop: 0,
     minHeight: "100%",
@@ -99,4 +102,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingLeft: 10,
   },
+  habitGroupsContainer: {
+    gap: 20,
+  }
 });

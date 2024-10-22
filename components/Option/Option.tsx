@@ -4,7 +4,7 @@ import useTheme from '@/hooks/useTheme';
 const Option = (props: any) => {
   const { option, value, extras, selected, setSelected } = props;
 
-  const { primary, secondary, background, text } = useTheme();
+  const { background, text } = useTheme();
 
   const handleDeselect = () => {
     setSelected(null);
@@ -17,7 +17,7 @@ const Option = (props: any) => {
   if (selected == value) {
     return (
         <TouchableOpacity 
-            style={[styles.select, {backgroundColor: primary}]} 
+            style={[styles.select, {backgroundColor: text}]} 
             key={value} 
             onPress={handleDeselect}
         >
@@ -29,7 +29,7 @@ const Option = (props: any) => {
 
   return (
     <TouchableOpacity 
-        style={[styles.select, {backgroundColor: secondary}]} 
+        style={[styles.select, {backgroundColor: "transparent"}]} 
         key={value} 
         onPress={handleSelect}
     >
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
         gap: 5,
         width: "100%",
         borderRadius: 15,
+        borderWidth: 2,
       },
       text: {
         fontSize: 16,

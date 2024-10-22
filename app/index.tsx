@@ -11,7 +11,7 @@ import { Vector3 } from 'three'
 const Page = () => {
   const { used } = useOnboardStore(state => state);
   
-  const { secondary, text, background } = useTheme();
+  const { text, background } = useTheme();
 
   useFocusEffect(() => {
     if (used) {
@@ -56,7 +56,7 @@ const Page = () => {
         <Button 
           title="Already Have an Account" 
           onPress={handleNavigateToLogIn} 
-          backgroundColor={secondary}
+          backgroundColor={background}
           color={text}
           isBorder
         />

@@ -1,8 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
-  FontAwesome6,
   Ionicons,
-  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import useTheme from "@/hooks/useTheme";
 
@@ -13,11 +11,11 @@ const Type = ({
   activeType,
   setActiveType,
 }: any) => {
-  const { background, primary } = useTheme();
+  const { background, text } = useTheme();
 
   if (activeType == type) {
     return (
-      <View style={[styles.type, { backgroundColor: primary }]}>
+      <View style={[styles.type, { backgroundColor: text }]}>
         <Text style={[{ color: background, fontWeight: "800" }]}>{title}</Text>
         {icon ?
           <Ionicons name={icon} style={[{ color: background }]} size={18} />
@@ -28,7 +26,7 @@ const Type = ({
 
   return (
     <TouchableOpacity
-      style={[styles.type, { backgroundColor: "rgb(225, 224, 227)" }]}
+      style={[styles.type, { backgroundColor: background, borderWidth: 2, borderColor: text }]}
       onPress={() => setActiveType(type)}
     >
       <Text>{title}</Text>
@@ -43,8 +41,10 @@ export default Type;
 
 const styles = StyleSheet.create({
   type: {
+    width: "auto",
+    height: "100%",
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
     borderRadius: 15,
     gap: 10,
     display: "flex",

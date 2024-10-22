@@ -23,7 +23,7 @@ const HabitSelect = ({
 }: any) => {
   const { habit, setHabit } = useCreateHabitStore();
 
-  const { primary, secondary, text, background } = useTheme();
+  const { text, background } = useTheme();
 
   const handleHabitSelect = () => {
     setActiveHabit(name);
@@ -43,7 +43,7 @@ const HabitSelect = ({
         <TouchableOpacity
           style={[
             styles.container,
-            { backgroundColor: primary, borderColor: text },
+            { backgroundColor: text, borderColor: text, borderWidth: 2 },
           ]}
           onPress={() => {
             setActiveHabit("");
@@ -71,7 +71,7 @@ const HabitSelect = ({
       <TouchableOpacity
         style={[
           styles.container,
-          { backgroundColor: secondary, borderColor: text },
+          { backgroundColor: "transparent", borderColor: text, borderWidth: 2 },
         ]}
         onPress={handleHabitSelect}
       >
