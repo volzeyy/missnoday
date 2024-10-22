@@ -8,15 +8,27 @@ import { Ionicons } from "@expo/vector-icons";
 import useTheme from "@/hooks/useTheme";
 import { router } from "expo-router";
 import useFetchFriends from "@/hooks/useFetchFriends";
-import Avatar from "../Avatar";
 import useFetchUser from "@/hooks/useFetchUser";
 import User from "../User/User";
+import { useEffect } from "react";
+import useFriendsStore from "@/stores/useFriendsStore";
+import UserProps from "@/types/UserProps";
 
-const Friends = (props: { user_id: string | undefined }) => {
-  const { user_id } = props;
+const Friends = (props: { user_id?: string, user?: UserProps }) => {
+  const { user_id, user } = props;
 
-  const friends = useFetchFriends(user_id);
-  const user = useFetchUser(user_id);
+  const friendsData = useFetchFriends(user_id);
+  const userData = useFetchUser(user_id);
+
+  const { friends, setFriends } = useFriendsStore();
+
+  useEffect(() => {
+    if (!friendsData) {
+      return;
+    }
+
+    setFriends(friendsData);
+  }, [friendsData])
 
   const { primary, background } = useTheme();
 
@@ -37,8 +49,8 @@ const Friends = (props: { user_id: string | undefined }) => {
       <ScrollView contentContainerStyle={[styles.container]} horizontal>
         <TouchableOpacity onPress={handleNavigateToCustomize}>
           <User
-            key={user?.id}
-            user={user ? user : undefined}
+            key={user ? user.id : userData ? userData.id : undefined}
+            user={user ? user : userData ? userData : undefined}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -56,10 +68,9 @@ const Friends = (props: { user_id: string | undefined }) => {
           {friends &&
             friends.friends_list &&
             friends.friends_list.map((friend, index) => (
-              <Avatar
+              <User
                 key={index}
                 user_id={friend}
-                onPress={() => handleNavigateToFriendProfile(friend)}
               />
             ))}
         </View>
