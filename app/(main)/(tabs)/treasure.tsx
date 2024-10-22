@@ -1,17 +1,28 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useUserStore from '@/stores/useUserStore'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import Button from '@/components/Button'
 import { supabase } from '@/config/supabase'
 import { router } from 'expo-router'
 import useTheme from '@/hooks/useTheme'
+import useRewardStore from '@/stores/useRewardStore'
 
 const Treasure = () => {
   const [loading, setLoading] = useState(false)
+
+  const { reward, setReward } = useRewardStore();
   const { user, setUser } = useUserStore(state => state)
 
-  const { text, background, primary, secondary, accent } = useTheme()
+  const { text, background } = useTheme()
+
+  useEffect(() => {
+    if (!reward) {
+      return;
+    }
+
+    router.navigate("/(main)/treasurechest")
+  }, [reward])
 
   const handlePurchaseTreasureChest = async () => {
     try {
@@ -21,13 +32,14 @@ const Treasure = () => {
   
       setLoading(true);
 
-      const { error: purchaseError } = await supabase.rpc('purchase_treasure_chest', { current_user_id: user.id  });
+      const { data, error: purchaseError } = await supabase.rpc('purchase_treasure_chest', { current_user_id: user.id  });
 
       if (purchaseError) {
         throw purchaseError.message
       }
 
       setUser({...user, coins: user.coins && user.coins - 500})
+      setReward(data)
     } catch (error) {
       alert(error)
     } finally {
@@ -63,26 +75,29 @@ const Treasure = () => {
 
   return (
     <View style={[styles.scrollViewContainer, {backgroundColor: background}]}>
-      <ScrollView contentContainerStyle={[styles.container]}>
-          <View style={[styles.section, {backgroundColor: "rgb(225, 224, 227)"}]}>
+      <ScrollView 
+        contentContainerStyle={[styles.container]} 
+        showsVerticalScrollIndicator={false}
+      >
+          <View style={[styles.section, {borderWidth: 2}]}>
             <Text style={[styles.title, {color: text}]}>Refill your streak freezes to protect your streak!</Text>
             <View style={styles.streakFreezeContainer}>
-              <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze >= 1 ? {color: primary} : {color: text, opacity: 0.3}]} />
-              <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze >= 2 ? {color: primary} : {color: text, opacity: 0.3}]} />
-              <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze >= 3 ? {color: primary} : {color: text, opacity: 0.3}]} />
-              <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze == 4 ? {color: primary} : {color: text, opacity: 0.3}]} />
+              <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze >= 1 ? {color: text} : {color: text, opacity: 0.3}]} />
+              <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze >= 2 ? {color: text} : {color: text, opacity: 0.3}]} />
+              <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze >= 3 ? {color: text} : {color: text, opacity: 0.3}]} />
+              <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze == 4 ? {color: text} : {color: text, opacity: 0.3}]} />
             </View>
             <Button title="REFILL 🟡 1000" isDisabled={loading} onPress={handlePurchaseStreakFreeze} />
             <Text style={{ color: text }}>Streak freezes will refill every month.</Text>
           </View>
-          <View style={[styles.section, {backgroundColor: "rgb(225, 224, 227)"}]}>
+          <View style={[styles.section, {borderWidth: 2}]}>
             <Text style={[styles.title, {color: text}]}>Obtain cosmetics from the Treasure Chest!</Text>
             <View style={styles.treasureContainer}>
-              <MaterialCommunityIcons name="treasure-chest" size={200} color={primary} />
+              <MaterialCommunityIcons name="treasure-chest" size={200} color={text} />
             </View>
             <View style={styles.actions}>
               <Button title="OPEN 🟡 500" isDisabled={loading} onPress={handlePurchaseTreasureChest} />
-              <Button title="SEE CONTENTS" isDisabled={loading} onPress={handleNavigateToContents} color={text} backgroundColor={"rgba(0, 0, 0, 0.3)"} />
+              <Button title="SEE CONTENTS" isDisabled={loading} onPress={handleNavigateToContents} color={text} backgroundColor='transparent' isBorder />
             </View>
           </View>
       </ScrollView>
