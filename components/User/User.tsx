@@ -3,6 +3,7 @@ import Avatar from '../Avatar'
 import useFetchUser from '@/hooks/useFetchUser';
 import UserProps from '@/types/UserProps';
 import Streak from '../Streak';
+import { router } from 'expo-router';
 
 const User = (props: {
     user_id?: string, 
@@ -12,10 +13,23 @@ const User = (props: {
 
   const userData = useFetchUser(user_id || undefined);
 
+  const handleNavigateToUserProfile = () => {
+    if (user_id) {
+        router.navigate(`/(main)/user/${user_id}`);
+    }
+
+    if (user) {
+        router.navigate("/(main)/customize");
+    }
+  }
+
   return (
     <View style={styles.container}>
         <View>
-            <Avatar src={user ? user.avatar_url : userData?.avatar_url} />
+            <Avatar 
+                src={user ? user.avatar_url : userData?.avatar_url}
+                onPress={handleNavigateToUserProfile}
+            />
         </View>
         <View style={styles.userInfoContainer}>
             <Text style={styles.username}>{user ? user.username : userData?.username}</Text>
