@@ -68,7 +68,7 @@ const Scene = (props: {
     <Fragment>
       <Canvas>
         <Suspense>
-          <Environment preset="lobby" environmentIntensity={1} environmentRotation={[2, -8, 2]} />
+          <Environment preset="apartment" environmentIntensity={1} environmentRotation={[2, -9, 2]} />
         </Suspense>
         <Suspense fallback={null}>
           <Character character={character ? character : characterData} colors={colors ? colors : null} rotationY={rotationY} />
