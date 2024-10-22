@@ -9,6 +9,8 @@ import useTheme from '@/hooks/useTheme';
 import useSessionStore from '@/stores/useSessionStore';
 import { supabase } from '@/config/supabase';
 import * as NavigationBar from 'expo-navigation-bar';
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'
 
 export {
   // Catch any errors thrown by the Layout component.
