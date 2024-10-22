@@ -4,23 +4,38 @@ import Tip from '@/components/Tip';
 import useFetchUnlocks from '@/hooks/useFetchUnlocks';
 import useCharacterStore from '@/stores/useCharacterStore';
 import useUserStore from '@/stores/useUserStore';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Vector3 } from 'three';
 import useColorsStore from '@/stores/useColorsStore';
 import ColorPalette from "@/components/ColorPalette";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import COSMETICS from '@/constants/Cosmetics';
+import COLORS from '@/constants/Colors';
 import Type from '@/components/Type';
 import { supabase } from '@/config/supabase';
 import useUnlocksStore from '@/stores/useUnlocksStore';
+import useTheme from '@/hooks/useTheme';
+import { Ionicons } from '@expo/vector-icons';
+import RoundButton from '@/components/RoundButton';
+import Avatar from '@/components/Avatar';
 
 const Customize = () => {
+  const [loading, setLoading] = useState(false);
   const [activeType, setActiveType] = useState<string | null>("all");
-  const { user } = useUserStore();
-  const { character } = useCharacterStore();
+  const [activeColorType, setActiveColorType] = useState<string | null>("skin");
+  const [customization, setCustomization] = useState<"cosmetics" | "colors">("cosmetics");
+
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const { user, setUser } = useUserStore();
   const { colors } = useColorsStore();
+  const { character } = useCharacterStore();
   const { unlocks, setUnlocks } = useUnlocksStore();
+  
+  const { text, background } = useTheme();
   const unlocksData = useFetchUnlocks(user?.id);
+
+  const filteredUnlocks = (activeType === "all" ? unlocks : unlocks && unlocks.filter(unlock => unlock.type === activeType)) || [];
 
   useEffect(() => {
     if (unlocksData && unlocksData.length > 0 && (!unlocks || unlocks.length === 0)) {
@@ -30,6 +45,16 @@ const Customize = () => {
       });
     }
   }, [unlocksData]);
+
+  useEffect(() => {
+    handleColorsUpdate();
+  }, [colors]);
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
+    }
+  }, [filteredUnlocks])
 
   const fetchCosmetic = async (cosmetic_id: string) => {
     try {
@@ -61,55 +86,160 @@ const Customize = () => {
     }
   };
 
-  useEffect(() => {
-    handleColorsUpdate();
-  }, [colors]);
+  const handleSwitchToCosmetics = () => {
+    if (customization === "cosmetics") return;
 
-  const filteredUnlocks = (activeType === "all" ? unlocks : unlocks && unlocks.filter(unlock => unlock.type === activeType)) || [];
+    setCustomization("cosmetics");
+  }
+
+  const handleSwitchToColors = () => {
+    if (customization === "colors") return;
+
+    setCustomization("colors");
+  }
+
+  const getRandomSeed = () => {
+    return Math.random().toString(36).substring(2);
+  }
+
+  const getRandomAvatar = () => {
+    const seed = getRandomSeed();
+    const apiUrl = `https://api.dicebear.com/9.x/pixel-art-neutral/png?seed=${seed}`;
+
+    return apiUrl;
+  }
+
+  const handleUpdateAvatar = async () => {
+    try {
+      if (loading) {
+        return;
+      }
+
+      if (!user) {
+        return;
+      }
+
+      setLoading(true);
+
+      const avatar = getRandomAvatar();
+      const { error } = await supabase
+        .from('users')
+        .update({ avatar_url: avatar })
+        .eq('id', user?.id);
+      
+      if (error) {
+        throw error.message;
+      }
+
+      setUser({ ...user, avatar_url: avatar })
+    } catch (error) {
+      alert(error)
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.sceneContainer}>
+        <View style={[styles.avatarContainer, loading ? {opacity: 0.5} : null]}>
+          <Avatar 
+            src={user?.avatar_url} 
+            onPress={handleUpdateAvatar}
+          />
+        </View>
         <Scene
           character={character}
           colors={colors}
           cameraPos={new Vector3(0, 2.75, 7)}
         />
       </View>
-      <View style={styles.contentContainer}>
-        <ScrollView horizontal contentContainerStyle={styles.typesContainer} showsHorizontalScrollIndicator={false}>
-          {Object.values(COSMETICS).map((cosmeticType) => (
-            <Type
-              key={cosmeticType.name}
-              title={cosmeticType.name}
-              type={cosmeticType.type}
-              setActiveType={setActiveType}
-              activeType={activeType}
+      <View style={[styles.contentContainer, {borderColor: text}]}>
+        <View style={styles.customizationSelectContainer}>
+          <TouchableOpacity 
+            style={[styles.select, customization == "cosmetics" ? {backgroundColor: text} : null]}
+            onPress={handleSwitchToCosmetics}
+          >
+            <Ionicons
+              size={24}
+              name={customization == "cosmetics" ? 'shirt' : 'shirt-outline'}
+              color={customization == "cosmetics" ? background : text}
             />
-          ))}
-        </ScrollView>
-        {activeType !== "all" && filteredUnlocks.length > 0 && (
-          <ColorPalette activeType={activeType} />
-        )}
-        <View style={{ gap: 10 }}>
-          {filteredUnlocks.length > 0 ? (
-            <>
-              <Text style={{ fontSize: 16, fontWeight: "bold" }}>Unlocked cosmetics</Text>
-              <ScrollView contentContainerStyle={styles.cosmeticsContainer} horizontal showsHorizontalScrollIndicator={false}>
+            <Text style={[styles.customization, customization == "cosmetics" ? {color: background} : {color: text}]}>Cosmetics</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.select, customization == "colors" ? {backgroundColor: text} : null]}
+            onPress={handleSwitchToColors}
+          >
+            <Ionicons
+              size={24}
+              name={customization == "colors" ? 'color-palette' : 'color-palette-outline'}
+              color={customization == "colors" ? background : text}
+            />
+            <Text style={[styles.customization, customization == "colors" ? {color: background} : {color: text}]}>Colors</Text>
+          </TouchableOpacity>
+        </View>
+        {
+          customization === "colors" ? (
+            <View style={styles.customizationContainer}>
+              <View style={styles.typesContainer}>
+                <ScrollView horizontal contentContainerStyle={styles.typesScrollViewContainer} showsHorizontalScrollIndicator={false}>
+                  {Object.values(COLORS).map((colorType) => (
+                    <Type
+                      key={colorType.name}
+                      title={colorType.name}
+                      type={colorType.type}
+                      setActiveType={setActiveColorType}
+                      activeType={activeColorType}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+              <ColorPalette 
+                activeType={activeColorType} 
+              />
+            </View>
+          )
+          : (
+        <View style={styles.customizationContainer}>
+          <View style={styles.typesContainer}>
+            <ScrollView horizontal contentContainerStyle={styles.typesScrollViewContainer} showsHorizontalScrollIndicator={false}>
+              {Object.values(COSMETICS).map((cosmeticType) => (
+                <Type
+                  key={cosmeticType.name}
+                  title={cosmeticType.name}
+                  type={cosmeticType.type}
+                  setActiveType={setActiveType}
+                  activeType={activeType}
+                />
+              ))}
+            </ScrollView>
+          </View>
+          <View style={styles.cosmeticsContainer}>
+            {filteredUnlocks.length > 0 ? (
+              <ScrollView 
+                contentContainerStyle={styles.cosmetics} 
+                showsHorizontalScrollIndicator={false}
+                snapToStart={true}
+                ref={scrollViewRef}
+                horizontal 
+              >
                 {filteredUnlocks.map((unlock) => (
                   <CosmeticEquip key={unlock.id} id={unlock.id} name={unlock.name} />
                 ))}
               </ScrollView>
-            </>
-          ) : (
-            <View style={styles.tipContainer}>
-              <Tip
-                title="No cosmetics unlocked yet!"
-                tip="You can unlock cosmetics by completing habits every day and purchasing the treasure chest."
-              />
-            </View>
-          )}
+            ) : (
+              <View style={styles.tipContainer}>
+                <Tip
+                  title="No cosmetics unlocked yet!"
+                  tip="You can unlock cosmetics by completing habits every day and purchasing the treasure chest."
+                />
+              </View>
+            )}
+          </View>
         </View>
+          )
+        }
       </View>
     </View>
   );
@@ -126,30 +256,72 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   contentContainer: {
-    paddingLeft: 10,
-    paddingTop: 10,
     paddingBottom: 10,
     gap: 20,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(0, 0, 0, 0.15)",
+    borderTopWidth: 2,
     height: "auto",
     width: "100%",
   },
   tipContainer: {
     padding: 10,
-    paddingTop: 0,
   },
   cosmeticsContainer: {
     display: "flex",
+    flexDirection: "column",
+    gap: 5,
+  },
+  cosmetics: {
+    display: "flex",
     flexDirection: "row",
     gap: 10,
-    paddingRight: 10,
+    paddingHorizontal: 10
   },
-  typesContainer: {
+  typesScrollViewContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start",
     gap: 10,
     paddingRight: 10,
+    paddingLeft: 10,
+  },
+  customizationSelectContainer: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    padding: 10,
+    gap: 10,
+  },
+  select: {
+    flexGrow: 1,
+    borderWidth: 2,
+    padding: 20,
+    borderRadius: 10,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent",
+    flexDirection: "row",
+    gap: 5,
+    width: 1, // This is a hack to make the buttons equal width LOL, found out about it on accident
+  },
+  typesContainer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 5,
+  },
+  customization: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  customizationContainer: {
+    gap: 10,
+  },
+  avatarContainer: {
+    position: "absolute",
+    top: 0,
+    left: 10,
+    display: "flex",
+    flexDirection: "row",
+    zIndex: 10,
   },
 });
