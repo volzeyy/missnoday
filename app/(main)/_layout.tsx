@@ -1,10 +1,12 @@
 import useFetchCharacter from '@/hooks/useFetchCharacter';
 import useFetchColors from '@/hooks/useFetchColors';
+import useFetchFriends from '@/hooks/useFetchFriends';
 import useFetchHabits from '@/hooks/useFetchHabits';
 import useFetchUser from '@/hooks/useFetchUser';
 import useTheme from '@/hooks/useTheme'
 import useCharacterStore from '@/stores/useCharacterStore';
 import useColorsStore from '@/stores/useColorsStore';
+import useFriendsStore from '@/stores/useFriendsStore';
 import useHabitsStore from '@/stores/useHabitsStore';
 import useSessionStore from '@/stores/useSessionStore';
 import useUserStore from '@/stores/useUserStore';
@@ -19,13 +21,15 @@ const Layout = () => {
     const { session } = useSessionStore();
     const { setUser } = useUserStore();
     const { setCharacter } = useCharacterStore();
-    const { setHabits } = useHabitsStore();
+    const { habits, setHabits } = useHabitsStore();
     const { colors, setColors } = useColorsStore();
+    const { setFriends } = useFriendsStore();
 
     const userData = useFetchUser(session?.user.id)
     const habitsData = useFetchHabits(session?.user.id)
     const characterData = useFetchCharacter(session?.user.id)
     const colorsData = useFetchColors(session?.user.id)
+    const friendsData = useFetchFriends(session?.user.id)
 
     useEffect(() => {
         if (!userData) {
@@ -44,12 +48,20 @@ const Layout = () => {
     }, [characterData])
 
     useEffect(() => {
-        if (!habitsData) {
+        if (!habitsData || habits.length > 0) {
             return;
         }
 
-        setHabits(habitsData);
+        setHabits(prev => [...prev, ...habitsData]);
     }, [habitsData])
+
+    useEffect(() => {
+        if (!friendsData) {
+            return;
+        }
+
+        setFriends(friendsData);
+    }, [friendsData])
 
     useEffect(() => {
         if (!colorsData) {
@@ -66,6 +78,10 @@ const Layout = () => {
             headerShadowVisible: false,
             headerStyle: { backgroundColor: background },
             contentStyle: { backgroundColor: background },
+            headerTitleStyle: {
+                fontSize: 24,
+                fontWeight: "600"
+            },
             headerLeft: () => (
               <TouchableOpacity style={{ paddingRight: 10}} onPress={() => {router.dismiss()}}>
                 <Ionicons size={28} color={"black"} name="arrow-back" />
@@ -85,6 +101,10 @@ const Layout = () => {
             />
             <Stack.Screen 
                 name="treasurechest" 
+                options={{
+                    animation: "fade",
+                    animationDuration: 100,
+                }}
             />
             <Stack.Screen
                 name="contents" 
@@ -99,6 +119,7 @@ const Layout = () => {
             <Stack.Screen 
                 name="customize" 
                 options={{
+                    animation: "slide_from_bottom",
                     title: "Customize",
                     headerShown: true,
                 }}
