@@ -6,7 +6,7 @@ const useFetchCosmetic = (cosmetic_id: string | undefined) => {
     const [cosmetic, setCosmetic] = useState<CosmeticProps | null>(null);
   
     useEffect(() => {
-      if (cosmetic_id && !cosmetic) {
+      if (cosmetic_id) {
         getCosmeticData();
       }
     }, [cosmetic_id]);
