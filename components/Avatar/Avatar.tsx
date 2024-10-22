@@ -15,7 +15,7 @@ const Avatar = (props: any) => {
           ]}
         >
           <Image
-            source={src ?? undefined}
+            source={{ uri: src ?? undefined}}
             style={[
               styles.avatarImage,
             ]}
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: 80,
     height: 80,
+    borderWidth: 2,
   },
   container: {
     display: "flex",
