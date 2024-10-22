@@ -36,9 +36,6 @@ const Friends = (props: { user_id?: string, user?: UserProps }) => {
     router.navigate("/(main)/friends");
   };
 
-  const handleNavigateToFriendProfile = (friendId: string) => {
-    router.navigate(`/(main)/user/${friendId}`);
-  };
 
   const handleNavigateToCustomize = () => {
     router.navigate("/(main)/customize")
