@@ -113,12 +113,6 @@ function RootLayoutNav() {
         name="(habit)" 
       />
       <Stack.Screen 
-        name="onboard" 
-        options={{ 
-          presentation: 'modal',
-        }}
-      />
-      <Stack.Screen 
         name="privacypolicy" 
         options={{ 
           presentation: 'modal' 
