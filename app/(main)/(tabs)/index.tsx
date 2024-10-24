@@ -30,7 +30,7 @@ const Home = () => {
   return (
     <View style={[styles.container, {backgroundColor: background, paddingTop: insets.top}]}>
       <Friends 
-        user_id={user?.id}
+        user={user || undefined}
       />
       <View style={{ flex: 1, width: "100%"}}>
         <Suspense>
