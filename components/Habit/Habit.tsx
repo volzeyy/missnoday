@@ -12,6 +12,7 @@ import { supabase } from "@/config/supabase";
 
 const Habit = (props: any) => {
   const {
+    user_id,
     habit_id,
     name,
     goal,
@@ -33,6 +34,10 @@ const Habit = (props: any) => {
   const handleCompleteHabit = async () => {
     try {
       if (!user || !habit_id || isDoneToday || isExpired) {
+        return;
+      }
+
+      if (user_id !== user.id) {
         return;
       }
 
