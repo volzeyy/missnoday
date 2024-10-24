@@ -16,6 +16,7 @@ const HabitGroup = (props: any) => {
         {habitGroup.map((habit: HabitsProps) => (
           <Habit
             key={habit.id}
+            user_id={habit.user_id}
             habit_id={habit.id}
             name={habit.name}
             goal={habit.goal}
@@ -23,6 +24,7 @@ const HabitGroup = (props: any) => {
             createdAt={habit.created_at}
             typeName={HABITS[habit.type].name}
             isDoneToday={habit.is_done_today}
+            isExpired={habit.is_expired}
           />
         ))}
       </View>
