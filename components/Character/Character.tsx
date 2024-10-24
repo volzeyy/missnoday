@@ -14,6 +14,8 @@ import useFetchSource from "@/hooks/useFetchSource";
 import CharacterProps from "@/types/CharacterProps";
 import ColorsProps from "@/types/ColorsProps";
 
+const originalColors = new Map();
+
 const Character = (props: {rotationY: number, character: CharacterProps | null, colors: ColorsProps | null}) => {
   const { rotationY, character, colors } = props;
 
@@ -47,31 +49,28 @@ const Character = (props: {rotationY: number, character: CharacterProps | null, 
   useEffect(() => {
     if (characterScene && faceTexture) {
       characterScene.traverse((child: Object3D) => {
-        
-        if ((child as Mesh).isMesh && child.name == "body") {
+        if ((child as Mesh).isMesh) {
           const mesh = child as Mesh;
           const material = mesh.material as MeshBasicMaterial;
-
-          if (colors && colors.skin) {
-            material.color = new Color(colors.skin);
+  
+          // Store original colors
+          if (!originalColors.has(mesh.name)) {
+            originalColors.set(mesh.name, material.color.clone());
           }
-        }
-
-        if ((child as Mesh).isMesh && child.name === "head") {
-          const mesh = child as Mesh;
-          const material = mesh.material as MeshBasicMaterial;
-
-          if (colors && colors.skin) {
-            material.color = new Color(colors.skin);
-          }
-
-          if (material) {
-            if (material.map == null) {
-              return;
+  
+          if (child.name === "body" || child.name === "head") {
+            if (colors && colors.skin) {
+              material.color = new Color(colors.skin);
+            } else {
+              // Reset to the original color
+              material.color.copy(originalColors.get(mesh.name));
             }
-
-            material.map.image = (faceTexture as Texture).image;
-            material.map.needsUpdate = true;
+  
+            if (child.name === "head" && material.map) {
+              material.map.image = (faceTexture as Texture).image;
+              material.map.needsUpdate = true;
+            }
+  
             material.needsUpdate = true;
           }
         }

@@ -2,7 +2,6 @@ import Character from "../Character";
 import { Fragment, Suspense, useCallback, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber/native";
 import {
-  Environment,
   PerspectiveCamera,
 } from "@react-three/drei/native";
 import { PanResponder, View } from "react-native";
@@ -11,6 +10,7 @@ import useFetchCharacter from "@/hooks/useFetchCharacter";
 import { Vector3 } from "three";
 import CharacterProps from "@/types/CharacterProps";
 import ColorsProps from "@/types/ColorsProps";
+import useFetchColors from "@/hooks/useFetchColors";
 
 const Scene = (props: {
   user_id?: string, 
@@ -26,6 +26,7 @@ const Scene = (props: {
   } = props;
 
   const characterData = useFetchCharacter(user_id);
+  const colorsData = useFetchColors(user_id);
 
   const [rotationY, setRotationY] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -67,11 +68,14 @@ const Scene = (props: {
   return (
     <Fragment>
       <Canvas>
-        <Suspense>
-          <Environment preset="apartment" environmentIntensity={1} environmentRotation={[2, -9, 2]} />
-        </Suspense>
+        <ambientLight intensity={1} />
+        <directionalLight
+          position={[10, 10, 10]}
+          intensity={2}
+        />
+        <pointLight position={[-2, 5, -2]} intensity={0.5} />
         <Suspense fallback={null}>
-          <Character character={character ? character : characterData} colors={colors ? colors : null} rotationY={rotationY} />
+          <Character character={character ? character : characterData} colors={colors ? colors : colorsData ? colorsData : null} rotationY={rotationY} />
         </Suspense>
         <PerspectiveCamera
           makeDefault

@@ -4,39 +4,49 @@ import { useGLTF } from '@react-three/drei/native';
 import { forwardRef, useEffect } from 'react';
 import { Color, Mesh, MeshBasicMaterial, Object3D } from 'three';
 
-const Cosmetic = forwardRef((props: { 
-    cosmetic_id: string | null, 
-    color: string | null,
-    type: string 
+const originalColors = new Map();
+
+const Cosmetic = forwardRef((props: {
+  cosmetic_id: string | null,
+  color: string | null,
+  type: string
 }, ref: React.Ref<any>) => {
-    const { cosmetic_id, color, type } = props;
+  const { cosmetic_id, color, type } = props;
+  const source = useFetchSource(cosmetic_id);
+  const gltf = useGLTF(source || COSMETICS[type].default || "");
 
-    const source = useFetchSource(cosmetic_id);
+  useEffect(() => {
+    if (gltf && gltf.scene) {
+      gltf.scene.traverse((child: Object3D) => {
+        if ((child as Mesh).isMesh) {
+          const mesh = child as Mesh;
+          const material = mesh.material as MeshBasicMaterial;
 
-    const gltf = useGLTF(source || COSMETICS[type].default || "");
+          if (!originalColors.has(mesh.name)) {
+            originalColors.set(mesh.name, material.color.clone());
+          }
+          
+          // Reset to original color if no color is provided
+          if (material && !color) {
+            material.color.copy(originalColors.get(mesh.name));
+            material.needsUpdate = true;
+          }
 
-    useEffect(() => {
-        if (gltf && gltf.scene && color) {
-          gltf.scene.traverse((child: Object3D) => {
-            if ((child as Mesh).isMesh) {
-              const mesh = child as Mesh;
-              const material = mesh.material as MeshBasicMaterial;
-    
-              // Apply color to the mesh material
-              if (material) {
-                material.color = new Color(color);
-                material.needsUpdate = true;
-              }
-            }
-          });
+          // Apply color to the mesh material
+          if (material && color) {
+            material.color = new Color(color);
+            material.needsUpdate = true;
+          }
         }
-      }, [gltf.scene, color]);
-
-    if (!cosmetic_id) {
-        return null;
+      });
     }
-    
-    return <primitive {...props} object={gltf.scene} ref={ref} />
-})
+  }, [gltf.scene, color]);
+
+  if (!cosmetic_id) {
+    return null;
+  }
+  
+  return <primitive {...props} object={gltf.scene} ref={ref} />
+});
 
 export default Cosmetic;
