@@ -38,41 +38,47 @@ const Friends = () => {
       <View style={styles.scrollViewContainer}>
         <ScrollView contentContainerStyle={styles.scrollView}>
           {matchingUsers && (
-            <View style={styles.matchingUsersContainer}>
+            <View style={styles.usersGroupContainer}>
               <Text style={[styles.title, { color: text }]}>
                 Found {matchingUsers.length}{" "}
                 {matchingUsers.length == 1 ? "user" : "users"}
               </Text>
-              {matchingUsers.map((friend: any, index: number) => {
-                return <SendRequest user_id={friend.id} key={index} />;
-              })}
+              <View style={styles.usersContainer}>
+                {matchingUsers.map((friend: any, index: number) => {
+                  return <SendRequest user_id={friend.id} key={index} />;
+                })}
+              </View>
             </View>
           )}
           {friends &&
             friends.received_requests &&
             friends.received_requests.length !== 0 && (
-              <View style={styles.received_requests}>
+              <View style={styles.usersGroupContainer}>
                 <Text style={[styles.title, { color: text }]}>
                   You have {friends.received_requests.length} friend{" "}
                   {friends.received_requests.length == 1
                     ? "request"
                     : "requests"}
                 </Text>
-                {friends.received_requests.map(
-                  (friend_id: string, index: number) => {
-                    return <ReceivedRequest key={index} user_id={friend_id} />;
-                  }
-                )}
+                <View style={styles.usersContainer}>
+                  {friends.received_requests.map(
+                    (friend_id: string, index: number) => {
+                      return <ReceivedRequest key={index} user_id={friend_id} />;
+                    }
+                  )}
+                </View>
               </View>
             )}
           {filteredRandomUsers && filteredRandomUsers.length > 0 ? (
-            <View style={styles.matchingUsersContainer}>
+            <View style={styles.usersGroupContainer}>
               <Text style={[styles.title, { color: text }]}>
                 Recommended friends
               </Text>
-              {filteredRandomUsers.map((friend: any, index: number) => {
-                return <SendRequest user_id={friend.id} key={index} />;
-              })}
+              <View style={styles.usersContainer}>
+                {filteredRandomUsers.map((friend: any, index: number) => {
+                  return <SendRequest user_id={friend.id} key={index} />;
+                })}
+              </View>
             </View>
           ) : (
             <Tip
@@ -81,11 +87,13 @@ const Friends = () => {
             />
           )}
           {friends && friends.sent_requests && friends.sent_requests.length > 0 && (
-            <View style={styles.sent_requests}>
+            <View style={styles.usersGroupContainer}>
               <Text style={[styles.title, { color: text }]}>Sent requests</Text>
-              {friends.sent_requests.map((friend: any, index: number) => {
-                return <SentRequest user_id={friend} key={index} />;
-              })}
+              <View style={styles.usersContainer}>
+                {friends.sent_requests.map((friend: any, index: number) => {
+                  return <SentRequest user_id={friend} key={index} />;
+                })}
+              </View>
             </View>
           )}
         </ScrollView>
@@ -103,7 +111,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     gap: 20,
   },
-  matchingUsersContainer: {
+  usersGroupContainer: {
     width: "100%",
     gap: 10,
   },
@@ -136,4 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
   },
+  usersContainer: {
+    gap: 20,
+  }
 });
