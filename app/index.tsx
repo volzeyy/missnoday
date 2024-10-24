@@ -1,25 +1,14 @@
 import Button from '@/components/Button'
 import Scene from '@/components/Scene'
 import useTheme from '@/hooks/useTheme'
-import useOnboardStore from '@/stores/useOnboardStore'
-import { router, useFocusEffect } from 'expo-router'
+import { router } from 'expo-router'
 import { Suspense } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Vector3 } from 'three'
 
 const Page = () => {
-  const { used } = useOnboardStore(state => state);
-  
   const { text, background } = useTheme();
-
-  useFocusEffect(() => {
-    if (used) {
-      return;
-    }
-    
-    router.push("/onboard");
-  });
 
   const handleNavigateToRegister = () => {
     router.navigate("/(register)");
