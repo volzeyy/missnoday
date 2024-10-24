@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.voldemarezerin.missnoday"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,6 +33,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "65c1b27f-8e6d-4208-8c8d-c75d91d48269"
+      }
     }
   }
 }
