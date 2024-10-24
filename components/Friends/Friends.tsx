@@ -43,7 +43,11 @@ const Friends = (props: { user_id?: string, user?: UserProps }) => {
 
   return (
     <View style={styles.scrollViewContainer}>
-      <ScrollView contentContainerStyle={[styles.container]} horizontal>
+      <ScrollView 
+        contentContainerStyle={[styles.container]}
+        showsHorizontalScrollIndicator={false}
+        horizontal
+      >
         <TouchableOpacity onPress={handleNavigateToCustomize}>
           <User
             key={user ? user.id : userData ? userData.id : undefined}
