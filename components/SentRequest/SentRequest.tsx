@@ -27,7 +27,7 @@ const SentRequest = (props: { user_id: string }) => {
               <Text style={[styles.username, {color: background, opacity: 0.7}]}>@{user.username}</Text>
             </View>
           </View>
-          <Text style={[styles.tip, {color: text}]}>User has yet to accept or deny your request!</Text>
+          <Text style={[styles.tip, {color: background}]}>User has yet to accept or deny your request!</Text>
         </>
       ) : (
         <Text style={{ color: background }}>Loading...</Text>
