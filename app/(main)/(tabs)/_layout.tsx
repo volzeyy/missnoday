@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from "react-native";
 import { Tabs } from "expo-router";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import useTheme from "@/hooks/useTheme";
 import useUserStore from "@/stores/useUserStore";
 
@@ -14,10 +14,10 @@ const Layout = () => {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: text,
-        tabBarInactiveTintColor: "rgba(0, 0, 0, 0.3)",
+        tabBarInactiveTintColor: "rgba(0, 0, 0, 0.7)",
         headerTitleStyle: {
           fontSize: 24,
-          fontWeight: "600",
+          fontWeight: "800",
         },
         headerStyle: {
           backgroundColor: background,
@@ -34,8 +34,8 @@ const Layout = () => {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons size={28} name="home" color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons size={28} name={focused ? "home" : "home-outline"} color={color} />
           ),
         }}
       />
@@ -45,10 +45,10 @@ const Layout = () => {
           title: "Your Habits",
           tabBarLabel: "Habits",
           headerShown: true,
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
               size={28}
-              name="script-text"
+              name={focused ? "checkmark-circle" : "checkmark-circle-outline"}
               color={color}
             />
           ),
@@ -70,10 +70,10 @@ const Layout = () => {
               </Text>
             </View>
           ),
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
               size={28}
-              name="treasure-chest"
+              name={focused ? "sparkles" : "sparkles-outline"}
               color={color}
             />
           ),
