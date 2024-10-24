@@ -8,8 +8,9 @@ import { router } from 'expo-router';
 const User = (props: {
     user_id?: string, 
     user?: UserProps
+    isRow?: boolean
 }) => {
-  const { user_id, user } = props;
+  const { user_id, user, isRow } = props;
 
   const userData = useFetchUser(user_id || undefined);
 
@@ -21,6 +22,22 @@ const User = (props: {
     if (user) {
         router.navigate("/(main)/customize");
     }
+  }
+
+  if (isRow) {
+    return (
+        <View style={[styles.container, {flexDirection: "row"}]}>
+            <Avatar 
+                src={user ? user.avatar_url : userData?.avatar_url}
+                onPress={handleNavigateToUserProfile}
+            />
+            <View style={[styles.userInfoContainer, {justifyContent: "flex-start", alignItems: "flex-start"}]}>
+                <Text style={styles.name}>{user ? user.full_name : userData?.full_name}</Text>
+                <Text style={styles.username}>@{user ? user.username : userData?.username}</Text>
+                <Streak days={user ? user.streak : userData?.streak} />
+            </View>
+        </View>
+    )
   }
 
   return (
@@ -53,5 +70,9 @@ const styles = StyleSheet.create({
     },
     username: {
         fontSize: 16,
+    },
+    name: {
+        fontSize: 20,
+        fontWeight: '600',
     }
 })
