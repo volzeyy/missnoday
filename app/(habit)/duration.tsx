@@ -8,11 +8,15 @@ import useTheme from "@/hooks/useTheme";
 import useUserStore from "@/stores/useUserStore";
 import { supabase } from "@/config/supabase";
 import { router } from "expo-router";
+import useHabitsStore from "@/stores/useHabitsStore";
+import useStatisticsStore from "@/stores/useStatisticsStore";
 
 const Duration = () => {
   const [selected, setSelected] = useState<number | null>(null)
   
   const { habit, setHabit } = useCreateHabitStore()
+  const { setHabits } = useHabitsStore();
+  const { statistics, setStatistics } = useStatisticsStore();
   const { user } = useUserStore();
 
   const { background } = useTheme();
@@ -26,22 +30,60 @@ const Duration = () => {
 
   async function handleCreateHabit() {
     try {
-      if (!user || !habit || !selected) {
+      if (!habit || !selected) {
         return;
       }
   
-      const { error } = await supabase.from("habits").insert({
-        user_id: user.id,
-        name: habit.name,
-        type: habit.type,
-        duration: selected,
-        goal: habit.goal,
-        created_at: new Date().toISOString(),
-      });
-  
-      if (error) {
-        throw error.message;
+      if (user && user.id) {
+        const { data, error } = await supabase.from("habits").insert({
+          user_id: user.id,
+          name: habit.name,
+          type: habit.type,
+          duration: selected,
+          goal: habit.goal,
+          created_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+    
+        if (error) {
+          throw error.message;
+        }
+
+        setHabits((prev) => {
+          return [
+            ...prev,
+            data
+          ];
+        })
+
+        setStatistics({...statistics,
+          habits_focused_on: (statistics.habits_focused_on ?? 0) + 1
+        })
+
+        router.navigate("/(main)/(tabs)/habits");
+        return;
       }
+
+      setHabits((prev) => {
+        return [
+          ...prev,
+          {
+            id: Math.random().toString(36).substring(7),
+            name: habit.name,
+            type: habit.type,
+            duration: selected,
+            goal: habit.goal,
+            created_at: new Date().toISOString(),
+            is_done_today: false,
+            is_expired: false,
+          },
+        ];
+      });
+
+      setStatistics({...statistics,
+        habits_focused_on: (statistics.habits_focused_on ?? 0) + 1
+      })
 
       router.navigate("/(main)/(tabs)/habits");
     } catch (error) {
