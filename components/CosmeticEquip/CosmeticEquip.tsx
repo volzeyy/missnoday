@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import { useState } from "react";
 import useTheme from "@/hooks/useTheme";
-import useFetchCosmetic from "@/hooks/useFetchCosmetic";
 import { supabase } from "@/config/supabase";
 import useCharacterStore from "@/stores/useCharacterStore";
 import CharacterProps from "@/types/CharacterProps";
@@ -15,12 +14,12 @@ import isCosmeticEquipped from "@/helpers/isCosmeticEquipped";
 import useUserStore from "@/stores/useUserStore";
 import CosmeticProps from "@/types/CosmeticProps";
 
-const CosmeticEquip = ({ id, name }: Partial<CosmeticProps>) => {
+const CosmeticEquip = ({ id, name, type }: Partial<CosmeticProps>) => {
   const [loading, setLoading] = useState(false);
 
   const { primary, text, background } = useTheme();
   
-  const { setCharacter } = useCharacterStore();
+  const { character, setCharacter } = useCharacterStore();
   const { user } = useUserStore();
 
   const isEquipped = isCosmeticEquipped(id);
@@ -32,6 +31,22 @@ const CosmeticEquip = ({ id, name }: Partial<CosmeticProps>) => {
       }
 
       if (!id) {
+        return;
+      }
+
+      if (user && !user.id) {
+        if (typeof type !== 'string' ) {
+          return;
+        }
+
+        if (character && character[type as keyof CharacterProps] === id) {
+          setCharacter({ ...character, [type]: null })
+          return;
+        }
+
+        setCharacter({ ...character, 
+          [type]: id,
+        });
         return;
       }
 
