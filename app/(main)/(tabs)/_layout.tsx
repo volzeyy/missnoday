@@ -55,6 +55,20 @@ const Layout = () => {
         }}
       />
       <Tabs.Screen
+        name="friends"
+        options={{
+          tabBarLabel: "Friends",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              size={28}
+              name={focused ? "people-circle" : "people-circle-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="treasure"
         options={{
           title: "Treasure",
