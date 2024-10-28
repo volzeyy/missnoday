@@ -12,10 +12,12 @@ const useFetchMatchingUsers = (username: string) => {
       const timeout = setTimeout(async () => {
         if (username.length >= 3) {
           try {
+            const sanitizedUsername = username.replace(/@/g, '').toLowerCase();
+
             const { data, error } = await supabase
               .from('users')
               .select('id')
-              .like('username', `%${username.toLowerCase()}%`)
+              .like('username', `%${sanitizedUsername}%`)
               .limit(10)
   
             if (error) {
