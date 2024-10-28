@@ -12,13 +12,13 @@ import useTheme from "@/hooks/useTheme";
 import Statistics from "@/components/Statistics";
 import useUserStore from "@/stores/useUserStore";
 import HabitGroup from "@/components/HabitGroup/HabitGroup";
-import Tip from "@/components/Tip";
+import HabitAction from "@/components/HabitAction";
 
 const Habits = () => {
   const { user } = useUserStore();
   const { habits } = useHabitsStore();
 
-  const { background, text } = useTheme();
+  const { background } = useTheme();
 
   const pendingHabits = habits?.filter(
     (habit) => !habit.is_done_today && !habit.is_expired
@@ -57,19 +57,7 @@ const Habits = () => {
             )}
           </View>
         ) : (
-          <View
-            style={{ gap: 10, justifyContent: "center", alignItems: "center" }}
-          >
-            <Tip title="No habits yet" tip="Start by creating a habit to focus on!" />
-            <TouchableOpacity
-              style={{ padding: 10, borderRadius: 10, backgroundColor: text }}
-              onPress={handleNavigateToCreateHabit}
-            >
-              <Text style={{ color: background, textAlign: "center" }}>
-                Create a habit
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <HabitAction />
         )}
       </ScrollView>
       <View style={styles.buttonContainer}>
@@ -91,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     gap: 40,
     padding: 10,
-    paddingTop: 0,
+    paddingVertical: 20,
     minHeight: "100%",
   },
   tipContainer: {
