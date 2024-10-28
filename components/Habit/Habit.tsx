@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotiView } from "moti";
 import confetti from "@/assets/lottie/confetti2.json";
 import { supabase } from "@/config/supabase";
+import useStatisticsStore from "@/stores/useStatisticsStore";
 
 const Habit = (props: any) => {
   const {
@@ -26,18 +27,32 @@ const Habit = (props: any) => {
   const [completed, setCompleted] = useState(false);
 
   const { text, background } = useTheme();
-  const { user } = useUserStore();
-  const { setHabits } = useHabitsStore();
+  const { user, setUser } = useUserStore();
+  const { habits, setHabits } = useHabitsStore();
+  const { statistics, setStatistics } = useStatisticsStore();
 
   const animation = useRef<LottieView>(null);
 
   const handleCompleteHabit = async () => {
     try {
-      if (!user || !habit_id || isDoneToday || isExpired) {
+      if (isDoneToday || isExpired) {
         return;
       }
 
-      if (user_id !== user.id) {
+      if (user_id && !user) {
+        return;
+      }
+
+      if (!user_id && !user.id) {
+        setCompleted(true);
+        return;
+      }
+
+      if (user && user_id !== user.id) {
+        return;
+      }
+
+      if (!user || !user.id) {
         return;
       }
 
@@ -45,6 +60,7 @@ const Habit = (props: any) => {
         current_user_id: user.id,
         current_habit_id: habit_id,
       });
+
       if (error) {
         throw error.message;
       }
@@ -56,11 +72,27 @@ const Habit = (props: any) => {
   };
 
   const handleUpdateState = () => {
+    const allHabitsDoneToday = habits.every((habit) => habit.is_done_today === false);
+    if (allHabitsDoneToday) {
+      setStatistics({
+      ...statistics,
+        highest_streak: (statistics.highest_streak || 0) + 1,
+        habits_done: (statistics.habits_done || 0) + 1,
+      });
+    } else {
+      setStatistics({
+        ...statistics,
+        habits_done: (statistics.habits_done || 0) + 1,
+      })  
+    }
+
     setHabits((prevHabits) =>
       prevHabits.map((habit) =>
         habit.id === habit_id ? { ...habit, is_done_today: true } : habit
       )
     );
+
+    setUser({...user, coins: (user.coins ?? 0) + 100});
   };
 
   useEffect(() => {
