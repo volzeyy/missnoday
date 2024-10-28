@@ -1,32 +1,17 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { router } from 'expo-router';
-import Avatar from '../Avatar';
-import useFetchUser from '@/hooks/useFetchUser';
+import { StyleSheet, Text, View } from 'react-native';
 import useTheme from '@/hooks/useTheme';
+import User from '../User/User';
 
 const SentRequest = (props: { user_id: string }) => {
   const { user_id } = props;
-  const user = useFetchUser(user_id);
 
   const { text, background } = useTheme();
 
-  const handleNavigateToUserProfile = () => {
-    router.navigate(`/(main)/user/${user_id}`);
-  };
-
   return (
     <View style={[styles.container, {backgroundColor: text, borderColor: text}]}>
-      {user ? (
+      {user_id ? (
         <>
-          <View style={styles.userInfo}>
-            <TouchableOpacity onPress={handleNavigateToUserProfile}>
-              <Avatar src={user.avatar_url} />
-            </TouchableOpacity>
-            <View style={styles.infoContainer}>
-              <Text style={[styles.name, {color: background}]}>{user.full_name}</Text>
-              <Text style={[styles.username, {color: background, opacity: 0.7}]}>@{user.username}</Text>
-            </View>
-          </View>
+          <User user_id={user_id} isRow  />
           <Text style={[styles.tip, {color: background}]}>User has yet to accept or deny your request!</Text>
         </>
       ) : (

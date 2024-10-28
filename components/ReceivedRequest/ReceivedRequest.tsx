@@ -1,16 +1,12 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { router } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
 import Button from '../Button';
-import Avatar from '../Avatar';
 import useSessionStore from '@/stores/useSessionStore';
 import useFriendsStore from '@/stores/useFriendsStore';
-import useFetchUser from '@/hooks/useFetchUser';
 import { supabase } from '@/config/supabase';
 import useTheme from '@/hooks/useTheme';
+import User from '../User/User';
 
 const ReceivedRequest = ({ user_id }: { user_id: string }) => {
-  const user = useFetchUser(user_id);
   const { session } = useSessionStore();
   const { friends, setFriends } = useFriendsStore();
 
@@ -55,25 +51,13 @@ const ReceivedRequest = ({ user_id }: { user_id: string }) => {
     }
   };
 
-  const handleNavigateToUserProfile = () => {
-    router.navigate(`/(main)/user/${user_id}`);
-  };
-
-  if (!user) {
+  if (!user_id) {
     return <Text>Loading...</Text>;
   }
 
   return (
     <View style={[styles.container, {backgroundColor: "transparent"}]}>
-      <View style={styles.userInfo}>
-        <TouchableOpacity onPress={handleNavigateToUserProfile}>
-          <Avatar src={user.avatar_url} />
-        </TouchableOpacity>
-        <View style={styles.infoContainer}>
-          <Text style={[styles.name, {color: text}]}>{user.full_name}</Text>
-          <Text style={[styles.username, {color: text, opacity: 0.7}]}>@{user.username}</Text>
-        </View>
-      </View>
+      <User user_id={user_id} isRow />
       <View style={styles.actions}>
         <Button title="Accept" onPress={acceptFriendRequest} color={background} backgroundColor={text} />
         <Button title="Deny" onPress={denyFriendRequest} backgroundColor={"transparent"} color={text} isBorder />

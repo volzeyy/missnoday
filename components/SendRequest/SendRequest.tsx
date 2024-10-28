@@ -9,6 +9,7 @@ import useFriendsStore from '@/stores/useFriendsStore';
 import useFetchUser from '@/hooks/useFetchUser';
 import useTheme from '@/hooks/useTheme';
 import Streak from '../Streak';
+import User from '../User/User';
 
 const SendRequest = ({ user_id }: { user_id: string }) => {
   const user = useFetchUser(user_id);
@@ -48,18 +49,7 @@ const SendRequest = ({ user_id }: { user_id: string }) => {
 
   return (
     <View style={[styles.container, {backgroundColor: background, borderColor: text}]}>
-      <View style={styles.userInfo}>
-        <TouchableOpacity onPress={handleNavigateToUserProfile}>
-          <Avatar src={user.avatar_url} />
-        </TouchableOpacity>
-        <View style={styles.infoContainer}>
-          <View style={styles.nameStreakContainer}>
-            <Text style={[styles.name, {color: text}]}>{user.full_name}</Text>
-            <Streak days={user.streak} />
-          </View>
-          <Text style={[styles.username, {color: text, opacity: 0.7}]}>@{user.username}</Text>
-        </View>
-      </View>
+      <User user_id={user_id} isRow />
       <View style={styles.actions}>
         <Button title="Send request" onPress={handleSendFriendRequest} color={background} backgroundColor={text} />
       </View>
