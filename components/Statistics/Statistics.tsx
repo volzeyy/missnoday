@@ -1,10 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
 import useFetchStatistics from "@/hooks/useFetchStatistics";
+import useStatisticsStore from "@/stores/useStatisticsStore";
+import { useEffect } from "react";
 
 const Statistics = (props: { user_id?: string }) => {
   const { user_id } = props;
 
+  const { statistics, setStatistics } = useStatisticsStore();
+
   const statisticsData = useFetchStatistics(user_id);
+
+  useEffect(() => {
+    if (statisticsData) {
+      setStatistics(statisticsData);
+    }
+  }, [statisticsData])
 
   return (
     <View style={styles.container}>
@@ -14,7 +24,7 @@ const Statistics = (props: { user_id?: string }) => {
             <Text style={styles.header}>Highest streak</Text>
           </View>
           <View style={styles.bodyContainer}>
-            <Text style={styles.body}>{statisticsData?.highest_streak}</Text>
+            <Text style={styles.body}>{statistics?.highest_streak}</Text>
           </View>
         </View>
         <View style={[styles.columnContainer]}>
@@ -22,7 +32,7 @@ const Statistics = (props: { user_id?: string }) => {
             <Text style={styles.header}>Active Habits</Text>
           </View>
           <View style={styles.bodyContainer}>
-            <Text style={styles.body}>{statisticsData?.habits_focused_on}</Text>
+            <Text style={styles.body}>{statistics?.habits_focused_on}</Text>
           </View>
         </View>
       </View>
@@ -32,7 +42,7 @@ const Statistics = (props: { user_id?: string }) => {
             <Text style={styles.header}>Habits done</Text>
           </View>
           <View style={styles.bodyContainer}>
-            <Text style={styles.body}>{statisticsData?.habits_done}</Text>
+            <Text style={styles.body}>{statistics?.habits_done}</Text>
           </View>
         </View>
         <View style={[styles.columnContainer]}>
@@ -40,7 +50,7 @@ const Statistics = (props: { user_id?: string }) => {
             <Text style={styles.header}>Habits not done</Text>
           </View>
           <View style={styles.bodyContainer}>
-            <Text style={styles.body}>{statisticsData?.habits_not_done}</Text>
+            <Text style={styles.body}>{statistics?.habits_not_done}</Text>
           </View>
         </View>
       </View>
