@@ -7,6 +7,8 @@ import Button from '@/components/Button'
 import useTheme from '@/hooks/useTheme'
 import { supabase } from '@/config/supabase'
 import useCreateAccountStore from '@/stores/useCreateAccountStore'
+import Tip from '@/components/Tip'
+import Info from '@/components/Info'
 
 const Page = () => {
   const { auth, setAuth } = useCreateAccountStore()
@@ -16,6 +18,8 @@ const Page = () => {
   const [username, setUsername] = useState('')
 
   const insets = useSafeAreaInsets()
+
+  const { background, text } = useTheme();
 
   const validateInput = async () => {
     try {
@@ -74,9 +78,10 @@ const Page = () => {
     router.navigate("/(register)/email")
   }
 
-  const handleNavigateToMain = () => {
+  const handleTryOutApp = () => {
     router.replace("/(main)/")
   }
+
   
   return (
     <View style={[styles.container, {paddingBottom: insets.bottom }]}>
@@ -98,6 +103,22 @@ const Page = () => {
           onPress={validateInput}
           isDisabled={!name || !username || loading}
         />
+        <Text style={{ fontSize: 12, color: text}}>or you could</Text>
+        <View style={styles.alternativeContainer}>
+          <Button 
+            title="Try the app"
+            onPress={handleTryOutApp}
+            color={text}
+            backgroundColor={background}
+            isBorder
+          />
+          <View style={styles.infoContainer}>
+            <Info 
+              text="Nothing will be saved unless you create an account. 
+              Trying out the app is purely for demonstration purposes."
+            />
+          </View>
+        </View>
       </View>
     </View>
   )
@@ -119,5 +140,15 @@ const styles = StyleSheet.create({
     gap: 20,
     width: "100%",
     alignItems: 'center',
+  },
+  alternativeContainer: {
+    width: "100%",
+    alignItems: 'center',
+    gap: 5,
+  },
+  infoContainer: {
+    width: "100%",
+    justifyContent: "flex-start",
+    paddingRight: 20,
   }
 })
