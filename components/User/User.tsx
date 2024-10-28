@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 
 const User = (props: {
     user_id?: string, 
-    user?: UserProps
+    user?: Partial<UserProps>
     isRow?: boolean
 }) => {
   const { user_id, user, isRow } = props;

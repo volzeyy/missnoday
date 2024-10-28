@@ -14,8 +14,8 @@ import useFetchColors from "@/hooks/useFetchColors";
 
 const Scene = (props: {
   user_id?: string, 
-  character?: CharacterProps | null,
-  colors?: ColorsProps | null,
+  character?: Partial<CharacterProps>,
+  colors?: Partial<ColorsProps>,
   cameraPos: Vector3
 }) => {
   const { 
@@ -75,7 +75,7 @@ const Scene = (props: {
         />
         <pointLight position={[-2, 5, -2]} intensity={0.5} />
         <Suspense fallback={null}>
-          <Character character={character ? character : characterData} colors={colors ? colors : colorsData ? colorsData : null} rotationY={rotationY} />
+          <Character character={character ? character : characterData} colors={colors ? colors : colorsData ? colorsData : undefined} rotationY={rotationY} />
         </Suspense>
         <PerspectiveCamera
           makeDefault

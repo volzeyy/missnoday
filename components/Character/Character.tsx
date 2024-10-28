@@ -16,7 +16,7 @@ import ColorsProps from "@/types/ColorsProps";
 
 const originalColors = new Map();
 
-const Character = (props: {rotationY: number, character: CharacterProps | null, colors: ColorsProps | null}) => {
+const Character = (props: {rotationY: number, character: Partial<CharacterProps> | null, colors?: Partial<ColorsProps>}) => {
   const { rotationY, character, colors } = props;
 
   const characterRef = useRef<Group>(null);
@@ -29,7 +29,7 @@ const Character = (props: {rotationY: number, character: CharacterProps | null, 
 
   const { scene: characterScene } = useGLTF(characterModelPath);
 
-  const source = useFetchSource(character && character.face)
+  const source = useFetchSource(character?.face ?? undefined)
 
   const faceTexture = useTexture(
     source || COSMETICS.face.default,
@@ -90,40 +90,40 @@ const Character = (props: {rotationY: number, character: CharacterProps | null, 
         <Suspense>
           <Cosmetic 
             ref={hatRef} 
-            cosmetic_id={character && character.hat} 
-            color={colors && colors.hat} 
+            cosmetic_id={character?.hat ?? undefined} 
+            color={colors?.hat ?? undefined} 
             type="hat" 
           />
         </Suspense>
         <Suspense>
           <Cosmetic 
             ref={hairRef} 
-            cosmetic_id={character && character.hair} 
-            color={colors && colors.hair}
+            cosmetic_id={character?.hair ?? undefined} 
+            color={colors?.hair ?? undefined}
             type="hair" 
           />
         </Suspense>
         <Suspense>
           <Cosmetic 
             ref={shirtRef} 
-            cosmetic_id={character && character.shirt} 
-            color={colors && colors.shirt}
+            cosmetic_id={character?.shirt ?? undefined} 
+            color={colors?.shirt ?? undefined}
             type="shirt" 
           />
         </Suspense>
         <Suspense>
           <Cosmetic 
             ref={pantsRef} 
-            cosmetic_id={character && character.pants}
-            color={colors && colors.pants}
+            cosmetic_id={character?.pants ?? undefined}
+            color={colors?.pants ?? undefined}
             type="pants" 
           />
         </Suspense>
         <Suspense>
           <Cosmetic 
             ref={shoesRef} 
-            cosmetic_id={character && character.shoes} 
-            color={colors && colors.shoes}
+            cosmetic_id={character?.shoes ?? undefined} 
+            color={colors?.shoes ?? undefined}
             type="shoes" 
           />
         </Suspense>

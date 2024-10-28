@@ -7,8 +7,8 @@ import { Color, Mesh, MeshBasicMaterial, Object3D } from 'three';
 const originalColors = new Map();
 
 const Cosmetic = forwardRef((props: {
-  cosmetic_id: string | null,
-  color: string | null,
+  cosmetic_id: string | undefined,
+  color: string | undefined,
   type: string
 }, ref: React.Ref<any>) => {
   const { cosmetic_id, color, type } = props;
