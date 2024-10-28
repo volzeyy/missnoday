@@ -7,12 +7,14 @@ import { supabase } from '@/config/supabase'
 import { router } from 'expo-router'
 import useTheme from '@/hooks/useTheme'
 import useRewardStore from '@/stores/useRewardStore'
+import useUnlocksStore from '@/stores/useUnlocksStore'
 
 const Treasure = () => {
   const [loading, setLoading] = useState(false)
 
   const { reward, setReward } = useRewardStore();
   const { user, setUser } = useUserStore(state => state)
+  const { setUnlocks, unlocks } = useUnlocksStore();
 
   const { text, background } = useTheme()
 
@@ -27,6 +29,28 @@ const Treasure = () => {
   const handlePurchaseTreasureChest = async () => {
     try {
       if (!user) {
+        return;
+      }
+
+      if (user && !user.id) {
+        if (user.coins != undefined && (user.coins === 0 || user.coins < 500)) {
+          alert("Not enough coins!")
+          return;
+        } else {
+          setLoading(true);
+
+          const unlockedCosmeticIds = unlocks.map(unlock => unlock.cosmetic_id);
+          const { data, error } = await supabase.rpc('get_filtered_cosmetics', { exclude_ids: unlockedCosmeticIds });
+
+          if (error) {
+            throw error.message
+          }
+
+          setUser({...user, coins: user.coins && user.coins - 500})
+          setUnlocks(prev => [...(prev ?? []), { id: (Math.random() * 10000).toString(), cosmetic_id: data }]);
+          setReward(data);
+        }
+
         return;
       }
   
@@ -50,6 +74,16 @@ const Treasure = () => {
   const handlePurchaseStreakFreeze = async () => {
     try {
       if (!user) {
+        return;
+      }
+
+      if (user && !user.id) {
+        if (user.coins || 0 < 1000) {
+          alert("Not enough coins!")
+          return;
+        } 
+          
+        setUser({...user, coins: user.coins && user.coins - 1000, streak_freeze: 4})
         return;
       }
 
@@ -79,7 +113,7 @@ const Treasure = () => {
         contentContainerStyle={[styles.container]} 
         showsVerticalScrollIndicator={false}
       >
-          <View style={[styles.section, {borderWidth: 2}]}>
+          <View style={[styles.section, {borderWidth: 4}]}>
             <Text style={[styles.title, {color: text}]}>Refill your streak freezes to protect your streak!</Text>
             <View style={styles.streakFreezeContainer}>
               <Ionicons name='flame' size={52} style={[user && user.streak_freeze && user.streak_freeze >= 1 ? {color: text} : {color: text, opacity: 0.3}]} />
@@ -90,7 +124,7 @@ const Treasure = () => {
             <Button title="REFILL 🟡 1000" isDisabled={loading} onPress={handlePurchaseStreakFreeze} />
             <Text style={{ color: text }}>Streak freezes will refill every month.</Text>
           </View>
-          <View style={[styles.section, {borderWidth: 2}]}>
+          <View style={[styles.section, {borderWidth: 4}]}>
             <Text style={[styles.title, {color: text}]}>Obtain cosmetics from the Treasure Chest!</Text>
             <View style={styles.treasureContainer}>
               <MaterialCommunityIcons name="treasure-chest" size={200} color={text} />
