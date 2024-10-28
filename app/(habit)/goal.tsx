@@ -6,7 +6,6 @@ import Button from "@/components/Button";
 import useCreateHabitStore from "@/stores/useCreateHabitStore";
 import habits from "@/constants/Habits";
 import useTheme from "@/hooks/useTheme";
-import openai from "@/config/openai";
 
 const Goal = () => {
   const { habit, setHabit } = useCreateHabitStore();
@@ -20,14 +19,6 @@ const Goal = () => {
     try {
       setLoading(true);
 
-      const isValid = await checkHabitGoal();
-
-      if (!isValid) {
-        throw new Error(
-          "AI thinks the goal you entered is invalid. Try and give a straight forward goal."
-        );
-      }
-
       setHabit({ ...habit, goal: goal });
       router.navigate("/(habit)/duration");
     } catch (error) {
@@ -36,50 +27,6 @@ const Goal = () => {
       setLoading(false);
     }
   };
-
-  async function checkHabitGoal(): Promise<boolean> {
-    if (!goal) {
-      return false;
-    }
-
-    if (!goal.length || goal.length > 128) {
-      return false;
-    }
-
-    const typeName = habits[habit?.type || ""].name;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content:
-            "Evaluate the following text input to determine if it is a valid habit goal. A valid habit goal must be clear, specific, and actionable.",
-        },
-        {
-          role: "user",
-          content: `Instruction: Return true or false; Input: Habit Name: ${habit?.name}, Habit Type: ${typeName}, User Goal: "${goal}"\nIs this a valid habit goal?; Output:`,
-        },
-      ],
-      temperature: 0.0,
-      max_tokens: 10,
-      top_p: 1,
-    });
-
-    if (completion.choices[0].message.content == null) {
-      throw new Error(
-        "The habit goal validator returned no response. Please try again."
-      );
-    }
-
-    const answer = completion.choices[0].message.content.trim().toLowerCase();
-
-    if (answer == "true") {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   return (
     <View style={[styles.container]}>
