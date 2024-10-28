@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/config/supabase";
 
-const useFetchSource = (cosmetic_id: string | null) => {
+const useFetchSource = (cosmetic_id: string | undefined) => {
   const [source, setSource] = useState<string | null>(null);
 
   useEffect(() => {
