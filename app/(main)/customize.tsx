@@ -1,7 +1,6 @@
 import CosmeticEquip from '@/components/CosmeticEquip/CosmeticEquip';
 import Scene from '@/components/Scene';
 import Tip from '@/components/Tip';
-import useFetchUnlocks from '@/hooks/useFetchUnlocks';
 import useCharacterStore from '@/stores/useCharacterStore';
 import useUserStore from '@/stores/useUserStore';
 import { ScrollView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
@@ -16,11 +15,12 @@ import { supabase } from '@/config/supabase';
 import useUnlocksStore from '@/stores/useUnlocksStore';
 import useTheme from '@/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
-import RoundButton from '@/components/RoundButton';
 import Avatar from '@/components/Avatar';
+import CosmeticProps from '@/types/CosmeticProps';
 
 const Customize = () => {
   const [loading, setLoading] = useState(false);
+  const [cosmetics, setCosmetics] = useState<CosmeticProps[]>([]);
   const [activeType, setActiveType] = useState<string | null>("all");
   const [activeColorType, setActiveColorType] = useState<string | null>("skin");
   const [customization, setCustomization] = useState<"cosmetics" | "colors">("cosmetics");
@@ -30,21 +30,26 @@ const Customize = () => {
   const { user, setUser } = useUserStore();
   const { colors } = useColorsStore();
   const { character } = useCharacterStore();
-  const { unlocks, setUnlocks } = useUnlocksStore();
+  const { unlocks } = useUnlocksStore();
   
   const { text, background } = useTheme();
-  const unlocksData = useFetchUnlocks(user?.id);
 
-  const filteredUnlocks = (activeType === "all" ? unlocks : unlocks && unlocks.filter(unlock => unlock.type === activeType)) || [];
+  const unlockedCosmetics = (activeType === "all" ? cosmetics : cosmetics && cosmetics.filter(unlock => unlock.type === activeType)) || [];
 
   useEffect(() => {
-    if (unlocksData && unlocksData.length > 0 && (!unlocks || unlocks.length === 0)) {
-      unlocksData.forEach(async (unlock) => {
-        const data = await fetchCosmetic(unlock.cosmetic_id);
-        setUnlocks((prevUnlocks) => (prevUnlocks ? [...prevUnlocks, data] : [data]));
-      });
-    }
-  }, [unlocksData]);
+    const fetchData = async () => {
+      if (unlocks && unlocks.length > 0) {
+        const cosmeticDataPromises = unlocks.map(async (unlock) => {
+          return await fetchCosmetic(unlock.cosmetic_id ?? "");
+        });
+        
+        const cosmeticData = await Promise.all(cosmeticDataPromises);
+        setCosmetics(cosmeticData);
+      }
+    };
+
+    fetchData();
+  }, [unlocks, setCosmetics]);
 
   useEffect(() => {
     handleColorsUpdate();
@@ -54,7 +59,7 @@ const Customize = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
     }
-  }, [filteredUnlocks])
+  }, [unlockedCosmetics])
 
   const fetchCosmetic = async (cosmetic_id: string) => {
     try {
@@ -68,7 +73,7 @@ const Customize = () => {
 
   const handleColorsUpdate = async () => {
     try {
-      if (!user || !colors) return;
+      if (!user || !user.id || !colors) return;
 
       const { error } = await supabase.from('colors').update({
         hat: colors?.hat,
@@ -115,7 +120,9 @@ const Customize = () => {
         return;
       }
 
-      if (!user) {
+      if (!user || !user.id) {
+        const avatar = getRandomAvatar();
+        setUser({ ...user, avatar_url: avatar });
         return;
       }
 
@@ -216,7 +223,7 @@ const Customize = () => {
             </ScrollView>
           </View>
           <View style={styles.cosmeticsContainer}>
-            {filteredUnlocks.length > 0 ? (
+            {cosmetics && unlockedCosmetics && unlockedCosmetics.length > 0 ? (
               <ScrollView 
                 contentContainerStyle={styles.cosmetics} 
                 showsHorizontalScrollIndicator={false}
@@ -224,8 +231,13 @@ const Customize = () => {
                 ref={scrollViewRef}
                 horizontal 
               >
-                {filteredUnlocks.map((unlock) => (
-                  <CosmeticEquip key={unlock.id} id={unlock.id} name={unlock.name} />
+                {unlockedCosmetics.map((cosmetic) => (
+                  <CosmeticEquip 
+                    key={cosmetic.id} 
+                    id={cosmetic.id} 
+                    name={cosmetic.name} 
+                    type={cosmetic.type}
+                  />
                 ))}
               </ScrollView>
             ) : (
