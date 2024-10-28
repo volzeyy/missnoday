@@ -9,13 +9,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Vector3 } from 'three';
 import HabitGroup from "@/components/HabitGroup/HabitGroup";
 import useColorsStore from '@/stores/useColorsStore';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
+import User from '@/components/User/User';
+import HabitAction from '@/components/HabitAction';
 
 const Home = () => {
+  const [loading, setLoading] = useState(false);
+
   const insets = useSafeAreaInsets();
   const { background } = useTheme()
 
-  const { user } = useUserStore();
+  const { user, setUser } = useUserStore();
   const { character } = useCharacterStore();
   const { colors } = useColorsStore();
   const { habits } = useHabitsStore();
@@ -29,40 +33,50 @@ const Home = () => {
 
   return (
     <View style={[styles.container, {backgroundColor: background, paddingTop: insets.top}]}>
-      <Friends 
-        user={user || undefined}
-      />
       <View style={{ flex: 1, width: "100%"}}>
+        <View style={[styles.avatarContainer, loading ? {opacity: 0.5} : null]}>
+          <User 
+            user={user}
+            isRow
+          />
+        </View>
         <Suspense>
           <Scene 
-            cameraPos={new Vector3(0, 2.7, 6.5)}
+            cameraPos={new Vector3(0, 3.5, 8)}
             colors={colors}
             character={character}
           />
         </Suspense>
       </View>
-      <View style={styles.scrollViewContainer}>
-          <ScrollView 
-            contentContainerStyle={styles.habitsContainer} 
-            showsHorizontalScrollIndicator={false}
-            horizontal 
-          >
-            {pendingHabits && pendingHabits.length > 0 && (
-              <HabitGroup
-                label="Pending"
-                habitGroup={pendingHabits}
-                direction="row"
-              />
-            )}
-            {completedHabits && completedHabits.length > 0 && (
-              <HabitGroup
-                label={pendingHabits?.length == 0 ? "Done for today!" : "Completed"}
-                habitGroup={completedHabits}
-                direction="row"
-              />
-            )}
-          </ScrollView>
+      {(pendingHabits && pendingHabits.length > 0) || 
+       (completedHabits && completedHabits.length > 0) ? (
+        <View style={styles.scrollViewContainer}>
+            <ScrollView 
+              contentContainerStyle={styles.habitsContainer} 
+              showsHorizontalScrollIndicator={false}
+              horizontal 
+            >
+              {pendingHabits && pendingHabits.length > 0 && (
+                <HabitGroup
+                  label="Pending"
+                  habitGroup={pendingHabits}
+                  direction="row"
+                />
+              )}
+              {completedHabits && completedHabits.length > 0 && (
+                <HabitGroup
+                  label={pendingHabits?.length == 0 ? "Done for today!" : "Completed"}
+                  habitGroup={completedHabits}
+                  direction="row"
+                />
+              )}
+            </ScrollView>
+          </View>
+      ) : (
+        <View style={styles.callToActionContainer}>
+          <HabitAction />
         </View>
+      )}
     </View>
   )
 }
@@ -72,7 +86,7 @@ export default Home
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    gap: 10,
   },
   buttonContainer: {
     width: "100%",
@@ -92,6 +106,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 10,
+    padding: 10,
   },
   groupContainer: {
     display: "flex",
@@ -100,4 +115,17 @@ const styles = StyleSheet.create({
   groupHeader: {
     fontSize: 16,
   },
+  avatarContainer: {
+    width: "100%",
+    position: "absolute",
+    display: "flex",
+    flexDirection: "row",
+    zIndex: 10,
+    padding: 10,
+    paddingTop: 20,
+    justifyContent: "center"
+  },
+  callToActionContainer: {
+    paddingBottom: 20,
+  }
 })
