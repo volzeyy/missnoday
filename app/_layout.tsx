@@ -11,11 +11,6 @@ import { supabase } from '@/config/supabase';
 import * as NavigationBar from 'expo-navigation-bar';
 import 'react-native-reanimated'
 import 'react-native-gesture-handler'
-import { vexo } from 'vexo-analytics';
-
-if (!__DEV__) { 
-  vexo("b5b8645d-a121-4c71-8346-93fed15cbdd2");
-}
 
 export {
   // Catch any errors thrown by the Layout component.
