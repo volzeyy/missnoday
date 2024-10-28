@@ -14,9 +14,14 @@ const Layout = () => {
           headerStyle: {
             backgroundColor: background,
           },
+          headerTitleStyle: {
+            fontWeight: "800",
+            fontSize: 24,
+          },
           contentStyle: {
             backgroundColor: background,
             padding: 10,
+            paddingTop: 20
           },
           headerLeft: () => (
             <TouchableOpacity style={{ paddingRight: 10}} onPress={() => {router.dismiss()}}>
