@@ -1,22 +1,22 @@
 
 import { create } from 'zustand';
-import CosmeticProps from '@/types/CosmeticProps';
+import UnlocksProps from '@/types/UnlocksProps';
 
 interface UnlocksState {
-  unlocks: CosmeticProps[] | null;
-  setUnlocks: (updater: (unlocks: CosmeticProps[] | null) => CosmeticProps[]) => void;
+  unlocks: Partial<UnlocksProps>[];
+  setUnlocks: (updater: (unlocks: Partial<UnlocksProps>[] | null) => Partial<UnlocksProps>[]) => void;
   clearUnlocks: () => void;
 }
 
 const useUnlocksStore = create<UnlocksState>((set) => ({
-  unlocks: null,
+  unlocks: [],
   setUnlocks: (updater) =>
     set((state) => ({
       unlocks: updater(state.unlocks),
     })),
   clearUnlocks: () =>
     set({
-      unlocks: null,
+      unlocks: [],
     }),
 }));
 
