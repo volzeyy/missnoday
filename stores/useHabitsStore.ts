@@ -3,8 +3,8 @@ import { create } from 'zustand';
 import HabitProps from '@/types/HabitProps';
 
 interface HabitsState {
-    habits: HabitProps[] | [];
-    setHabits: (updater: (habits: HabitProps[]) => HabitProps[]) => void;
+    habits: Partial<HabitProps>[] | [];
+    setHabits: (updater: (habits: Partial<HabitProps>[]) => Partial<HabitProps>[]) => void;
     clearHabits: () => void;
 }
 
