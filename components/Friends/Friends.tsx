@@ -13,12 +13,12 @@ import User from "../User/User";
 import { useEffect } from "react";
 import useFriendsStore from "@/stores/useFriendsStore";
 import UserProps from "@/types/UserProps";
+import Tip from "../Tip";
 
-const Friends = (props: { user_id?: string, user?: UserProps }) => {
-  const { user_id, user } = props;
+const Friends = (props: { user_id?: string, user?: Partial<UserProps> }) => {
+  const { user_id } = props;
 
   const friendsData = useFetchFriends(user_id);
-  const userData = useFetchUser(user_id);
 
   const { friends, setFriends } = useFriendsStore();
 
@@ -30,17 +30,6 @@ const Friends = (props: { user_id?: string, user?: UserProps }) => {
     setFriends(friendsData);
   }, [friendsData])
 
-  const { primary, background } = useTheme();
-
-  const handleNavigateToFriends = () => {
-    router.navigate("/(main)/friends");
-  };
-
-
-  const handleNavigateToCustomize = () => {
-    router.navigate("/(main)/customize")
-  }
-
   return (
     <View style={styles.scrollViewContainer}>
       <ScrollView 
@@ -48,23 +37,6 @@ const Friends = (props: { user_id?: string, user?: UserProps }) => {
         showsHorizontalScrollIndicator={false}
         horizontal
       >
-        <TouchableOpacity onPress={handleNavigateToCustomize}>
-          <User
-            key={user ? user.id : userData ? userData.id : undefined}
-            user={user ? user : userData ? userData : undefined}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleNavigateToFriends}
-          style={[styles.friendsButtonContainer, { backgroundColor: primary }]}
-        >
-          <Ionicons name="people" size={24} color={background} />
-          {friends &&
-          friends.received_requests &&
-          friends.received_requests.length ? (
-            <View style={styles.floatingCircle} />
-          ) : null}
-        </TouchableOpacity>
         <View style={styles.friendsListContainer}>
           {friends &&
             friends.friends_list &&
@@ -73,7 +45,7 @@ const Friends = (props: { user_id?: string, user?: UserProps }) => {
                 key={index}
                 user_id={friend}
               />
-            ))}
+          ))}
         </View>
       </ScrollView>
     </View>
