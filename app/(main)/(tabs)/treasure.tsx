@@ -78,7 +78,7 @@ const Treasure = () => {
       }
 
       if (user && !user.id) {
-        if (user.coins || 0 < 1000) {
+        if (user.coins != undefined && (user.coins === 0 || user.coins < 1000)) {
           alert("Not enough coins!")
           return;
         } 
