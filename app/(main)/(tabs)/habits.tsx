@@ -10,12 +10,12 @@ import useHabitsStore from "@/stores/useHabitsStore";
 import RoundButton from "@/components/RoundButton";
 import useTheme from "@/hooks/useTheme";
 import Statistics from "@/components/Statistics";
-import useUserStore from "@/stores/useUserStore";
 import HabitGroup from "@/components/HabitGroup/HabitGroup";
 import HabitAction from "@/components/HabitAction";
+import useStatisticsStore from "@/stores/useStatisticsStore";
 
 const Habits = () => {
-  const { user } = useUserStore();
+  const { statistics } = useStatisticsStore();
   const { habits } = useHabitsStore();
 
   const { background } = useTheme();
@@ -38,7 +38,7 @@ const Habits = () => {
         contentContainerStyle={styles.scrollViewContainer}
         showsVerticalScrollIndicator={false}
       >
-        <Statistics user_id={user?.id} />
+        <Statistics statistics={statistics} />
         {habits && habits.length ? (
           <View style={styles.habitGroupsContainer}>
             {pendingHabits && pendingHabits.length > 0 && (
