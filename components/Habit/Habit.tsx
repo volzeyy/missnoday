@@ -119,25 +119,27 @@ const Habit = (props: any) => {
                 : {},
             ]}
           >
-            <View style={[styles.statusContainer]}>
-              <View
-                style={[
-                  styles.status,
-                  isDoneToday || isExpired
-                    ? { backgroundColor: "transparent", borderColor: text }
-                    : { borderColor: background },
-                ]}
-              >
-                {isDoneToday || isExpired ? (
-                  <FontAwesome
-                    name={isExpired ? "times" : "check"}
-                    size={24}
-                    color={text}
-                  />
-                ) : null}
+            {isExpired == false ?
+              <View style={[styles.statusContainer]}>
+                <View
+                  style={[
+                    styles.status,
+                    isDoneToday
+                      ? { backgroundColor: "transparent", borderColor: text }
+                      : { borderColor: background },
+                  ]}
+                >
+                  {isDoneToday ? (
+                    <FontAwesome
+                      name={"check"}
+                      size={24}
+                      color={text}
+                    />
+                  ) : null}
+                </View>
               </View>
-            </View>
-            <View style={[styles.contentContainer]}>
+            : null}
+            <View style={[styles.contentContainer, isExpired ? {paddingLeft: 20} : null]}>
               <View style={styles.goalContainer}>
                 <Text
                   style={[
