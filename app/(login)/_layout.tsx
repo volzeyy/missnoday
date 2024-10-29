@@ -18,6 +18,10 @@ const Layout = () => {
         headerStyle: { 
           backgroundColor: background 
         },
+        headerTitleStyle: {
+          fontSize: 24,
+          fontWeight: "800"
+        },
         headerLeft: () => (
           <TouchableOpacity style={{ paddingRight: 10}} onPress={() => {router.dismiss()}}>
             <Ionicons size={28} color={text} name="arrow-back" />
