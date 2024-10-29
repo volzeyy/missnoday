@@ -10,10 +10,12 @@ import { supabase } from "@/config/supabase";
 import { router } from "expo-router";
 import useHabitsStore from "@/stores/useHabitsStore";
 import useStatisticsStore from "@/stores/useStatisticsStore";
+import useSessionStore from "@/stores/useSessionStore";
 
 const Duration = () => {
   const [selected, setSelected] = useState<number | null>(null)
   
+  const { session } = useSessionStore();
   const { habit, setHabit } = useCreateHabitStore()
   const { setHabits } = useHabitsStore();
   const { statistics, setStatistics } = useStatisticsStore();
@@ -34,7 +36,7 @@ const Duration = () => {
         return;
       }
   
-      if (user && user.id) {
+      if (session && session.user.id) {
         const { data, error } = await supabase.from("habits").insert({
           user_id: user.id,
           name: habit.name,

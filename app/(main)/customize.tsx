@@ -17,6 +17,7 @@ import useTheme from '@/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
 import Avatar from '@/components/Avatar';
 import CosmeticProps from '@/types/CosmeticProps';
+import useSessionStore from '@/stores/useSessionStore';
 
 const Customize = () => {
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,7 @@ const Customize = () => {
 
   const scrollViewRef = useRef<ScrollView>(null);
 
+  const { session } = useSessionStore();
   const { user, setUser } = useUserStore();
   const { colors } = useColorsStore();
   const { character } = useCharacterStore();
@@ -120,7 +122,7 @@ const Customize = () => {
         return;
       }
 
-      if (!user || !user.id) {
+      if (!session) {
         const avatar = getRandomAvatar();
         setUser({ ...user, avatar_url: avatar });
         return;

@@ -8,10 +8,12 @@ import { router } from 'expo-router'
 import useTheme from '@/hooks/useTheme'
 import useRewardStore from '@/stores/useRewardStore'
 import useUnlocksStore from '@/stores/useUnlocksStore'
+import useSessionStore from '@/stores/useSessionStore'
 
 const Treasure = () => {
   const [loading, setLoading] = useState(false)
 
+  const { session } = useSessionStore();
   const { reward, setReward } = useRewardStore();
   const { user, setUser } = useUserStore(state => state)
   const { setUnlocks, unlocks } = useUnlocksStore();
@@ -32,7 +34,7 @@ const Treasure = () => {
         return;
       }
 
-      if (user && !user.id) {
+      if (!session) {
         if (user.coins != undefined && (user.coins === 0 || user.coins < 500)) {
           alert("Not enough coins!")
           return;
@@ -63,7 +65,8 @@ const Treasure = () => {
       }
 
       setUser({...user, coins: user.coins && user.coins - 500})
-      setReward(data)
+      setUnlocks(prev => [...(prev ?? []), data]);
+      setReward(data.cosmetic_id)
     } catch (error) {
       alert(error)
     } finally {
@@ -77,7 +80,7 @@ const Treasure = () => {
         return;
       }
 
-      if (user && !user.id) {
+      if (!session) {
         if (user.coins != undefined && (user.coins === 0 || user.coins < 1000)) {
           alert("Not enough coins!")
           return;
