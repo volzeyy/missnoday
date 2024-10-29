@@ -1,20 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import useFetchStatistics from "@/hooks/useFetchStatistics";
-import useStatisticsStore from "@/stores/useStatisticsStore";
-import { useEffect } from "react";
+import StatisticsProps from "@/types/StatisticsProps";
 
-const Statistics = (props: { user_id?: string }) => {
-  const { user_id } = props;
-
-  const { statistics, setStatistics } = useStatisticsStore();
+const Statistics = (props: { statistics?: Partial<StatisticsProps>, user_id?: string }) => {
+  const { statistics, user_id } = props;
 
   const statisticsData = useFetchStatistics(user_id);
-
-  useEffect(() => {
-    if (statisticsData) {
-      setStatistics(statisticsData);
-    }
-  }, [statisticsData])
 
   return (
     <View style={styles.container}>
@@ -24,7 +15,7 @@ const Statistics = (props: { user_id?: string }) => {
             <Text style={styles.header}>Highest streak</Text>
           </View>
           <View style={styles.bodyContainer}>
-            <Text style={styles.body}>{statistics?.highest_streak}</Text>
+            <Text style={styles.body}>{statistics ? statistics?.highest_streak : statisticsData?.highest_streak}</Text>
           </View>
         </View>
         <View style={[styles.columnContainer]}>
@@ -32,7 +23,7 @@ const Statistics = (props: { user_id?: string }) => {
             <Text style={styles.header}>Active Habits</Text>
           </View>
           <View style={styles.bodyContainer}>
-            <Text style={styles.body}>{statistics?.habits_focused_on}</Text>
+            <Text style={styles.body}>{statistics ? statistics?.habits_focused_on : statisticsData?.habits_focused_on}</Text>
           </View>
         </View>
       </View>
@@ -42,7 +33,7 @@ const Statistics = (props: { user_id?: string }) => {
             <Text style={styles.header}>Habits done</Text>
           </View>
           <View style={styles.bodyContainer}>
-            <Text style={styles.body}>{statistics?.habits_done}</Text>
+            <Text style={styles.body}>{statistics ? statistics?.habits_done : statisticsData?.habits_done}</Text>
           </View>
         </View>
         <View style={[styles.columnContainer]}>
@@ -50,7 +41,7 @@ const Statistics = (props: { user_id?: string }) => {
             <Text style={styles.header}>Habits not done</Text>
           </View>
           <View style={styles.bodyContainer}>
-            <Text style={styles.body}>{statistics?.habits_not_done}</Text>
+            <Text style={styles.body}>{statistics ? statistics?.habits_not_done : statisticsData?.habits_not_done}</Text>
           </View>
         </View>
       </View>
