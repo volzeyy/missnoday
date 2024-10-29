@@ -7,7 +7,7 @@ const isCosmeticEquipped = (cosmetic_id: string | undefined) => {
         return false;
     }
 
-    return Object.values(character).includes(cosmetic_id);
+    return Object.values(character).includes(cosmetic_id ?? null);
 };
 
 export default isCosmeticEquipped;
