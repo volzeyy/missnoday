@@ -114,7 +114,7 @@ const Habit = (props: any) => {
             style={[
               styles.container,
               { backgroundColor: "black" },
-              isDoneToday
+              isDoneToday || isExpired
                 ? { backgroundColor: "transparent", borderWidth: 2 }
                 : {},
             ]}
@@ -123,12 +123,12 @@ const Habit = (props: any) => {
               <View
                 style={[
                   styles.status,
-                  isDoneToday
+                  isDoneToday || isExpired
                     ? { backgroundColor: "transparent", borderColor: text }
                     : { borderColor: background },
                 ]}
               >
-                {isDoneToday ? (
+                {isDoneToday || isExpired ? (
                   <FontAwesome
                     name={isExpired ? "times" : "check"}
                     size={24}
