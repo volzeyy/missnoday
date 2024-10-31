@@ -1,5 +1,5 @@
 import InputField from '@/components/InputField'
-import { router } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -98,12 +98,16 @@ const Page = () => {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Button 
-          title={loading ? "Loading" : "Continue"}
-          onPress={validateInput}
-          isDisabled={!name || !username || loading}
-        />
-        <Text style={{ fontSize: 12, color: text}}>or you could</Text>
+        <View style={styles.signup}>
+          <Button 
+            title={loading ? "Loading" : "Continue"}
+            onPress={validateInput}
+            isDisabled={!name || !username || loading}
+          />
+          <View style={{ width: "100%"}}>
+            <Text>By creating an account, you agree with the <Link style={{color: "blue"}} push href={"/privacypolicy"}>Privacy Policy.</Link></Text>
+          </View>
+        </View>
         <View style={styles.alternativeContainer}>
           <Button 
             title="Try the app"
@@ -137,9 +141,11 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   buttonContainer: {
+    flex: 1,
     gap: 20,
     width: "100%",
     alignItems: 'center',
+    justifyContent: "space-between",
   },
   alternativeContainer: {
     width: "100%",
@@ -150,5 +156,9 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "flex-start",
     paddingRight: 20,
+  },
+  signup: {
+    width: "100%",
+    gap: 10,
   }
 })
