@@ -1,4 +1,4 @@
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { router, Stack, useFocusEffect } from 'expo-router';
@@ -11,6 +11,7 @@ import { supabase } from '@/config/supabase';
 import * as NavigationBar from 'expo-navigation-bar';
 import 'react-native-reanimated'
 import 'react-native-gesture-handler'
+import { Ionicons } from '@expo/vector-icons';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,7 +45,7 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { background } = useTheme();
+  const { background, text } = useTheme();
 
   const { session, setSession } = useSessionStore();
 
@@ -83,9 +84,10 @@ function RootLayoutNav() {
         headerShadowVisible: false,
         headerStyle: { backgroundColor: background },
         contentStyle: { backgroundColor: background },
-        headerTitle: ({children}) => (
-          <Text style={styles.title}>{children}</Text>
-        ),
+        headerTitleStyle: {
+          fontWeight: '800',
+          fontSize: 24,
+        },
       }}
     >
       <Stack.Screen 
@@ -115,7 +117,14 @@ function RootLayoutNav() {
       <Stack.Screen 
         name="privacypolicy" 
         options={{ 
-          presentation: 'modal' 
+          headerShown: true,
+          presentation: 'modal',
+          title: "Privacy Policy",
+          headerLeft: () => (
+            <TouchableOpacity style={{ paddingRight: 10}} onPress={() => {router.dismiss()}}>
+              <Ionicons size={28} color={text} name="arrow-back" />
+            </TouchableOpacity>
+          ),
         }} 
       />
       <Stack.Screen 
