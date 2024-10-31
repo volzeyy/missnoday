@@ -8,13 +8,13 @@ import { Ionicons } from "@expo/vector-icons";
 import useTheme from "@/hooks/useTheme";
 
 const RoundButton = ({onPress, icon}: any) => {
-  const { primary, background } = useTheme();
+  const { text, background } = useTheme();
 
   return (
       <TouchableOpacity onPress={onPress}>
         <View style={styles.container}>
             <View
-              style={[styles.button, {backgroundColor: primary}]}
+              style={[styles.button, {backgroundColor: text}]}
             >
               <Ionicons size={24} name={icon} color={background} />
             </View>

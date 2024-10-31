@@ -1,26 +1,19 @@
 import { useColorScheme } from "react-native";
-import { darkTheme, lightTheme } from "@/constants/Theme";
+import { lightTheme } from "@/constants/Theme";
 import ThemeProps from "@/types/ThemeProps";
 
 const useTheme = (): ThemeProps => {
   const colorScheme = useColorScheme();
 
   const text 
-    = colorScheme === "dark" ? darkTheme.text : lightTheme.text;
+    = colorScheme === "dark" ? lightTheme.text : lightTheme.text;
   
   const background 
-    = colorScheme === "dark" ? darkTheme.background : lightTheme.background;
+    = colorScheme === "dark" ? lightTheme.background : lightTheme.background;
 
-  const primary =
-    colorScheme === "dark" ? darkTheme.primary : lightTheme.primary;
-
-  const secondary =
-    colorScheme === "dark" ? darkTheme.secondary : lightTheme.secondary;
-
-  const accent =
-    colorScheme === "dark" ? darkTheme.accent : lightTheme.accent;
-
-  return { text, background, primary, secondary, accent };
+  return { text, background };
 };
+
+// For now, only light theme will be supported
 
 export default useTheme;

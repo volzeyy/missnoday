@@ -14,7 +14,7 @@ const Button = (props: ButtonProps) => {
         onPress 
     } = props;
 
-    const { primary, text, background } = useTheme()
+    const { text, background } = useTheme()
 
     return (
         <TouchableOpacity onPress={onPress} disabled={isDisabled} 
@@ -22,7 +22,7 @@ const Button = (props: ButtonProps) => {
                 isDisabled ? {
                     ...styles.button, ...{backgroundColor: "rgba(0, 0, 0, 0.25)"},
                 } : {
-                    ...styles.button, backgroundColor: backgroundColor || primary,
+                    ...styles.button, backgroundColor: backgroundColor || text,
                 },
                 isBorder ? {...styles.buttonBorder, borderColor: text} : null
             ]}

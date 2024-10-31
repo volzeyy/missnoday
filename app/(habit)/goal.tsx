@@ -13,7 +13,7 @@ const Goal = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [goal, setGoal] = useState<string>("");
 
-  const { primary, background, text, accent } = useTheme();
+  const { background, text } = useTheme();
 
   const handleNavigateDuration = async () => {
     try {
@@ -47,7 +47,7 @@ const Goal = () => {
             isDisabled={!goal || loading}
             title="Continue"
             onPress={handleNavigateDuration}
-            backgroundColor={primary}
+            backgroundColor={text}
             color={background}
           />
         </View>

@@ -5,21 +5,21 @@ import useTheme from '@/hooks/useTheme';
 const Streak = (props: any) => {
   const { days } = props;
 
-  const { primary} = useTheme();
+  const { text} = useTheme();
   
   return (
     <View style={[styles.streakContainer]}>
         <Ionicons 
           name="flame" 
-          size={16} 
+          size={18} 
           style={[
-            {color: primary},
+            {color: text},
           ]} 
         />
         <Text 
           style={[
             styles.text,
-            {color: primary},
+            {color: text},
           ]}
         >{days}</Text>
     </View>

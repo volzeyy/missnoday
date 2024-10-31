@@ -17,7 +17,7 @@ import CosmeticProps from "@/types/CosmeticProps";
 const CosmeticEquip = ({ id, name, type }: Partial<CosmeticProps>) => {
   const [loading, setLoading] = useState(false);
 
-  const { primary, text, background } = useTheme();
+  const { text, background } = useTheme();
   
   const { character, setCharacter } = useCharacterStore();
   const { user } = useUserStore();
@@ -76,7 +76,7 @@ const CosmeticEquip = ({ id, name, type }: Partial<CosmeticProps>) => {
         style={[
           styles.container,
           { backgroundColor: background, width: 125, height: 125, borderWidth: 2, borderColor: text},
-          isEquipped ? { backgroundColor: primary } : {},
+          isEquipped ? { backgroundColor: text } : {},
         ]}
         onPress={handleEquipCosmetic}
         disabled={loading}
